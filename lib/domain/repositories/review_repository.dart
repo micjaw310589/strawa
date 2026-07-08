@@ -1,9 +1,6 @@
 import 'package:strawa/domain/entities/review.dart';
+import 'package:strawa/domain/repositories/repository.dart';
 
-abstract class ReviewRepository {
-  Future<List<Review?>> getAllReviews();
-  Future<Review?> getReviewById(String id);
-  Future<void> createReview(Review tag);
-  Future<void> updateReview(Review tag);
-  Future<void> deleteReview(String id);
+abstract class ReviewRepository extends Repository<Review> {
+
 }

@@ -1,9 +1,6 @@
 import 'package:strawa/domain/entities/product.dart';
+import 'package:strawa/domain/repositories/repository.dart';
 
-abstract class ProductRepository {
-  Future<List<Product?>> getAllProducts();
-  Future<Product?> getProductById(String id);
-  Future<void> createProduct(Product product);
-  Future<void> updateProduct(Product product);
-  Future<void> deleteProduct(String id);
+abstract class ProductRepository extends Repository<Product>{
+  
 }

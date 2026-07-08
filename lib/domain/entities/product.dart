@@ -7,10 +7,10 @@ class Product {
   final String? imageUrl;
   final Decimal? price;
   final int? calories;
-  final int? proteinG;
-  final int? carbohydratesG;
-  final int? fatG;
-  final int? weightG;
+  final Decimal? proteinG;
+  final Decimal? carbohydratesG;
+  final Decimal? fatG;
+  final Decimal? weightG;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final bool isActive;

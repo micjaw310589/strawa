@@ -1,9 +1,6 @@
 import 'package:strawa/domain/entities/news.dart';
+import 'package:strawa/domain/repositories/repository.dart';
 
-abstract class NewsRepository {
-  Future<List<News?>> getAllNews();
-  Future<News?> getNewsById(String id);
-  Future<void> createNews(News tag);
-  Future<void> updateNews(News tag);
-  Future<void> deleteNews(String id);
+abstract class NewsRepository extends Repository<News>{
+
 }

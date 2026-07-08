@@ -1,9 +1,6 @@
 import 'package:strawa/domain/entities/tag.dart';
+import 'package:strawa/domain/repositories/repository.dart';
 
-abstract class TagRepository {
-  Future<List<Tag?>> getAllTags();
-  Future<Tag?> getTagById(String id);
-  Future<void> createTag(Tag tag);
-  Future<void> updateTag(Tag tag);
-  Future<void> deleteTag(String id);
+abstract class TagRepository extends Repository<Tag> {
+
 }
