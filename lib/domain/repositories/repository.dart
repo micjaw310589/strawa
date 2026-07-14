@@ -1,7 +1,7 @@
 abstract class Repository<T> {
-  Future<List<T?>> getAll();
-  Future<T?> getById(String id);
-  Future<void> create(T obj);
+  Future<List<T>> fetchAll();
+  Future<T> fetchById(String id);
+  Future<void> insert(T obj);
   Future<void> update(T obj);
   Future<void> delete(String id);
 }

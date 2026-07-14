@@ -10,7 +10,7 @@ class ProductRepository implements Repository<Product>{
   // ============ Basic CRUD ============
 
   @override
-  Future<List<Product?>> getAll() async {
+  Future<List<Product>> fetchAll() async {
     final data = await _client.from('products').select().eq('is_deleted', false).order('created_at');
     return (data as List)
             .map((json) => Product.fromJson(json))
@@ -18,7 +18,7 @@ class ProductRepository implements Repository<Product>{
   }
 
   @override
-  Future<Product?> getById(String id) async {
+  Future<Product> fetchById(String id) async {
     final data = await _client.from('products').select().eq('is_deleted', false).eq('id', id).order('created_at').limit(1);
     return (data as List)
             .map((json) => Product.fromJson(json))
@@ -26,7 +26,7 @@ class ProductRepository implements Repository<Product>{
   }
 
   @override
-  Future<void> create(Product obj) async {
+  Future<void> insert(Product obj) async {
     await _client.from('products').insert(obj.toJson());
   }
 
@@ -43,8 +43,19 @@ class ProductRepository implements Repository<Product>{
   // ============ CRUD END ============
 
 
-  Future<List<ProductListElementDto?>> getProductList() async {
-    // TODO: fetch data using .rpc() method
-    throw UnimplementedError();
+  Future<List<ProductListElementDto>> getProductList() async {
+    final data = await _client.from('products')
+      .select('''
+        id,
+        name,
+        image_url,
+        price,
+        chains( name ),
+        tags( name ),
+        average_rating
+      ''')
+      .eq('is_deleted', false);
+
+    return (data as List).map((json) => ProductListElementDto.fromJson(json)).toList();
   }
 }

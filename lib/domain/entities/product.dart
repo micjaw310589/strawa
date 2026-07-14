@@ -51,18 +51,18 @@ class Product {
 
   Map<String, dynamic> toJson() => {
     'id' : id,
-    'chainId' : chainId,
+    'chain_id' : chainId,
     'name' : name,
-    'imageUrl' : imageUrl,
+    'image_url' : imageUrl,
     'price' : price,
     'calories' : calories,
-    'proteinG' : proteinG,
-    'carbohydratesG' : carbohydratesG,
-    'fatG' : fatG,
-    'weightG' : weightG,
-    'createdAt' : createdAt,
-    'updatedAt' : updatedAt,
-    'isActive' : isActive,
-    'isDeleted' : isDeleted
+    'protein_g' : proteinG,
+    'carbohydrates_g' : carbohydratesG,
+    'fat_g' : fatG,
+    'weight_g' : weightG,
+    'created_at' : createdAt,
+    'updated_at' : updatedAt,
+    'is_active' : isActive,
+    'is_deleted' : isDeleted
   };
 }

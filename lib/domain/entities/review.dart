@@ -25,11 +25,11 @@ class Review {
 
   Map<String, dynamic> toJson() => {
     'id' : id,
-    'productId' : productId,
+    'product_id' : productId,
     'rating' : rating,
-    'androidId' : androidId,
-    'createdAt' : createdAt,
-    'isDeleted' : isDeleted
+    'android_id' : androidId,
+    'created_at' : createdAt,
+    'is_deleted' : isDeleted
   };
 
 }
