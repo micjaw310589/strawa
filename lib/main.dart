@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:strawa/presentation/screens/home_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
@@ -18,54 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Products',
-      home: HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  final _future = Supabase.instance.client
-      .from('products')
-      .select();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder(
-        future: _future,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          final products = snapshot.data!;
-
-          if (products.isEmpty) {
-            return const Center(
-              child: Text(
-                'No products found.',
-                textAlign: TextAlign.center,
-              ),
-            );
-          }
-
-          return ListView.builder(
-            itemCount: products.length,
-            itemBuilder: ((context, index) {
-              final product = products[index];
-              return ListTile(
-                title: Text(product['name']),
-              );
-            }),
-          );
-        },
-      ),
+      home: HomeScreen(),
     );
   }
 }
