@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:decimal/decimal.dart';
 import 'package:strawa/presentation/widgets/product_tile.dart';
+import 'package:strawa/presentation/widgets/filter_panel.dart';
 import 'package:strawa/services/product_service.dart';
 import 'package:strawa/domain/dtos/product_list_element_dto.dart';
 
@@ -18,6 +20,13 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _hasMore = true;
   int _page = 1;
   final int _pageLimit = 20;
+
+  // Filter state
+  List<String> _selectedTags = [];
+  List<String> _selectedChains = [];
+  double _minPrice = 0.0;
+  double _maxPrice = 100.0;
+  double _minRating = 0.0;
 
   @override
   void initState() {
@@ -49,7 +58,15 @@ class _HomeScreenState extends State<HomeScreen> {
         _isLoading = true;
       });
 
-      List<ProductListElementDto> nextPage = await _productService.getProductsForMainList(page: _page, pageSize: _pageLimit);
+      List<ProductListElementDto> nextPage = await _productService.getProductsForMainList(
+        page: _page,
+        pageSize: _pageLimit,
+        tagNames: _selectedTags,
+        chainNames: _selectedChains,
+        minPrice: Decimal.fromInt(_minPrice.toInt()),
+        maxPrice: Decimal.fromInt(_maxPrice.toInt()),
+        minRating: _minRating,
+      );
       if (!mounted) return;
 
       if (nextPage.length < _pageLimit) {
@@ -64,6 +81,32 @@ class _HomeScreenState extends State<HomeScreen> {
         _page++;
       });
     }
+  }
+
+  void _showFilterPanel() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => FilterPanel(
+        initialTags: _selectedTags,
+        initialChains: _selectedChains,
+        initialMinPrice: _minPrice,
+        initialMaxPrice: _maxPrice,
+        initialMinRating: _minRating,
+        onFiltersApplied: (filteredProducts, selectedTags, selectedChains, minPrice, maxPrice, minRating) {
+          setState(() {
+            _products = filteredProducts;
+            _selectedTags = selectedTags;
+            _selectedChains = selectedChains;
+            _minPrice = minPrice;
+            _maxPrice = maxPrice;
+            _minRating = minRating;
+            _page = 1;
+            _hasMore = filteredProducts.length == _pageLimit;
+          });
+        },
+      ),
+    );
   }
 
   @override
@@ -89,21 +132,34 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: _refresh,
-        child: ListView.builder(
-          controller: _scrollController,
-          padding: const EdgeInsets.only(top: 8.0, bottom: 16.0),
-          itemCount: _products.length + (_hasMore ? 1 : 0),
-          itemBuilder: (context, index) {
-            if (index == _products.length) {
-              return Center(child: CircularProgressIndicator());
-            }
-            return ProductTile(
-                product: _products[index],
-            );
-          }
-        )
+      body: Stack(
+        children: [
+          RefreshIndicator(
+            onRefresh: _refresh,
+            child: ListView.builder(
+              controller: _scrollController,
+              padding: const EdgeInsets.only(top: 8.0, bottom: 80.0),
+              itemCount: _products.length + (_hasMore ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index == _products.length) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                return ProductTile(
+                    product: _products[index],
+                );
+              }
+            )
+          ),
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: FloatingActionButton(
+              onPressed: _showFilterPanel,
+              backgroundColor: Colors.blue,
+              child: const Icon(Icons.filter_list, color: Colors.white),
+            ),
+          ),
+        ],
       ),
     );
   }

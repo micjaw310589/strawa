@@ -58,12 +58,12 @@ class ProductRepository implements Repository<Product>{
   Future<List<ProductListElementDto>> fetchProductList({
     required int page,
     int pageSize = 20,
-    String tagName = '*',
-    String chainName = '*',
+    List<String> tagNames = const [],
+    List<String> chainNames = const [],
     Decimal? minPrice,
     Decimal? maxPrice,
-    double? minRating,
-    double? maxRating
+    double minRating = 0.0,
+    double maxRating = 5.0
   }) async {
     if (page < 0){
       throw Exception("Page cannot be lower than 0");
@@ -75,24 +75,13 @@ class ProductRepository implements Repository<Product>{
       throw Exception("Page size limit set to 100");
     }
 
-    minRating = (minRating == null) ? 0.0 : minRating;
-    maxRating = (maxRating == null) ? 9999.9 : maxRating;
-
-    if (maxRating < minRating){
-      throw Exception("Max rating can't be lower than min rating");
-    }
-
-    minPrice = (minPrice == null) ? Decimal.zero : minPrice;
-    maxPrice = (maxPrice == null) ? Decimal.parse(9999.99.toString()) : maxPrice;
-
-    if (maxPrice < minPrice){
-      throw Exception("Max price can't be lower than min price");
-    }
+    minPrice = minPrice ?? Decimal.zero;
+    maxPrice = maxPrice ?? Decimal.fromInt(100);
 
     final from = (page-1) * pageSize;
     final to = from + pageSize - 1;
 
-    final data = await _client.from('products')
+    var query = _client.from('products')
       .select('''
         id,
         name,
@@ -104,14 +93,22 @@ class ProductRepository implements Repository<Product>{
       ''')
       .eq('is_deleted', false)
       .eq('is_active', true)
-      .like('tags.name', tagName)
-      .like('chains.name', chainName)
       .gte('price', minPrice.toDouble())
       .lte('price', maxPrice.toDouble())
       .gte('average_rating', minRating)
-      .lte('average_rating', maxRating)
+      .lte('average_rating', maxRating);
+
+    if (tagNames.isNotEmpty){
+      query = query.inFilter('tags.name', tagNames);
+    }
+    if (chainNames.isNotEmpty){
+      query = query.inFilter('chains.name', chainNames);
+    }
+
+    final data = await query
       .order('average_rating', ascending: false)
       .range(from, to);
+
 
     return (data as List).map((json) => ProductListElementDto.fromJson(json)).toList();
   }

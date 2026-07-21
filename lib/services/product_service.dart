@@ -8,8 +8,8 @@ class ProductService {
   Future<List<ProductListElementDto>> getProductsForMainList({
     required int page,
     int pageSize = 20,
-    String tagName = '*',
-    String chainName = '*',
+    List<String> tagNames = const [],
+    List<String> chainNames = const [],
     Decimal? minPrice,
     Decimal? maxPrice,
     double minRating = 0.0,
@@ -21,20 +21,26 @@ class ProductService {
     if (minRating > 5.0 || maxRating > 5.0){
       throw Exception("Rating can't be higher than 5.0");
     }
+    if (maxRating < minRating){
+      throw Exception("Max rating can't be lower than min rating");
+    }
 
-    minPrice = (minPrice == null) ? Decimal.zero : minPrice;
-    maxPrice = (maxPrice == null) ? Decimal.parse(9999.99.toString()) : maxPrice;
+    minPrice = minPrice ?? Decimal.zero;
+    maxPrice = maxPrice ?? Decimal.fromInt(100);
 
     if (minPrice.toDouble() < 0.0 || maxPrice.toDouble() < 0.0) {
       throw Exception("Price can't be lower than 0");
+    }
+    if (maxPrice < minPrice){
+      throw Exception("Max price can't be lower than min price");
     }
 
     try{
       final productList = await _productRepository.fetchProductList(
         page: page,
         pageSize: pageSize,
-        tagName: tagName,
-        chainName: chainName,
+        tagNames: tagNames,
+        chainNames: chainNames,
         minPrice: minPrice,
         maxPrice: maxPrice,
         minRating: minRating,
