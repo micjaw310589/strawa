@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:decimal/decimal.dart';
+import 'package:strawa/domain/repositories/chain_repository.dart';
+import 'package:strawa/services/chain_service.dart';
 import 'package:strawa/services/product_service.dart';
 import 'package:strawa/domain/dtos/product_list_element_dto.dart';
 import 'package:strawa/services/tag_service.dart';
@@ -29,6 +31,7 @@ class FilterPanel extends StatefulWidget {
 class _FilterPanelState extends State<FilterPanel> {
   final ProductService _productService = ProductService();
   final TagService _tagService = TagService();
+  final ChainService _chainService = ChainService();
 
   // Filter state
   late List<String> _selectedTags;
@@ -40,9 +43,8 @@ class _FilterPanelState extends State<FilterPanel> {
   List<String> _availableTags = [];
   bool _isLoadingTags = false;
 
-  final List<String> _availableChains = [
-    'McDonalds', 'KFC', 'Burger King', 'Subway', 'Starbucks', 'Pizza Hut'
-  ];
+  List<String> _availableChains = [];
+  bool _isLoadingChains = false;
   
   @override
   void initState() {
@@ -58,13 +60,13 @@ class _FilterPanelState extends State<FilterPanel> {
 
     _minRating = widget.initialMinRating;
 
-    // Load available tags when filter panel opens
-    _loadAvailableTags();
+    _loadAvailableTagsAndChains();
   }
 
-  Future<void> _loadAvailableTags() async {
+  Future<void> _loadAvailableTagsAndChains() async {
     setState(() {
       _isLoadingTags = true;
+      _isLoadingChains = true;
     });
 
     try {
@@ -75,8 +77,6 @@ class _FilterPanelState extends State<FilterPanel> {
         });
       }
     } catch (e) {
-      // If there's an error, keep the current tags (which might be empty)
-      // and show an error message
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -92,6 +92,31 @@ class _FilterPanelState extends State<FilterPanel> {
         });
       }
     }
+
+    try {
+      final chains = await _chainService.getChainNames();
+      if (mounted) {
+        setState(() {
+          _availableChains = chains;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error loading chains: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingChains = false;
+        });
+      }
+    }
+
   }
 
   @override
@@ -219,31 +244,36 @@ class _FilterPanelState extends State<FilterPanel> {
           ),
         ),
         const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: _availableChains.map((chain) {
-            final isSelected = _selectedChains.contains(chain);
-            return FilterChip(
-              label: Text(chain),
-              selected: isSelected,
-              onSelected: (selected) {
-                setState(() {
-                  if (selected) {
-                    _selectedChains.add(chain);
-                  } else {
-                    _selectedChains.remove(chain);
-                  }
-                });
-              },
-              backgroundColor: Colors.grey[200],
-              selectedColor: Colors.green[200],
-              labelStyle: TextStyle(
-                color: isSelected ? Colors.white : Colors.black,
-              ),
-            );
-          }).toList(),
-        ),
+        if (_isLoadingChains)
+          const Center(child: CircularProgressIndicator())
+        else if (_availableChains.isEmpty)
+          const Text('No tags available')
+        else
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: _availableChains.map((chain) {
+              final isSelected = _selectedChains.contains(chain);
+              return FilterChip(
+                label: Text(chain),
+                selected: isSelected,
+                onSelected: (selected) {
+                  setState(() {
+                    if (selected) {
+                      _selectedChains.add(chain);
+                    } else {
+                      _selectedChains.remove(chain);
+                    }
+                  });
+                },
+                backgroundColor: Colors.grey[200],
+                selectedColor: Colors.green[200],
+                labelStyle: TextStyle(
+                  color: isSelected ? Colors.white : Colors.black,
+                ),
+              );
+            }).toList(),
+          ),
       ],
     );
   }

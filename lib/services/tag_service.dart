@@ -9,7 +9,7 @@ class TagService {
       return tagNameList;
     }
     catch(e) {
-      throw Exception("Couldn't retrieve tag names list from database: ${e.toString()}");
+      throw Exception("Service failed to retrieve tag names list from database: ${e.toString()}");
     }
   }
 }

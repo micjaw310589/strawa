@@ -49,7 +49,7 @@ class ProductService {
       return productList;
     }
     catch(e) {
-      throw Exception("Couldn't retrieve product list from database: ${e.toString()}");
+      throw Exception("Service failed to retrieve product list from database: ${e.toString()}");
     }
   }
 }
