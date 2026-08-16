@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:decimal/decimal.dart';
 import 'package:strawa/services/product_service.dart';
 import 'package:strawa/domain/dtos/product_list_element_dto.dart';
+import 'package:strawa/services/tag_service.dart';
 
 class FilterPanel extends StatefulWidget {
   final List<String> initialTags;
@@ -27,6 +28,7 @@ class FilterPanel extends StatefulWidget {
 
 class _FilterPanelState extends State<FilterPanel> {
   final ProductService _productService = ProductService();
+  final TagService _tagService = TagService();
 
   // Filter state
   late List<String> _selectedTags;
