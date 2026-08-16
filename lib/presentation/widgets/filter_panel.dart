@@ -49,11 +49,11 @@ class _FilterPanelState extends State<FilterPanel> {
   }
 
   // Available options
-  List<String> _availableTags = [
+  final List<String> _availableTags = [
     'Vegan', 'Vegetarian', 'Gluten-free', 'Spicy', 'New', 'Popular', 'Healthy'
   ];
 
-  List<String> _availableChains = [
+  final List<String> _availableChains = [
     'McDonalds', 'KFC', 'Burger King', 'Subway', 'Starbucks', 'Pizza Hut'
   ];
 
