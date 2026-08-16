@@ -36,9 +36,18 @@ class _FilterPanelState extends State<FilterPanel> {
   late RangeValues _priceRange;
   late double _minRating;
 
+  // Available options
+  List<String> _availableTags = [];
+  bool _isLoadingTags = false;
+
+  final List<String> _availableChains = [
+    'McDonalds', 'KFC', 'Burger King', 'Subway', 'Starbucks', 'Pizza Hut'
+  ];
+  
   @override
   void initState() {
     super.initState();
+
     _selectedTags = List.from(widget.initialTags);
     _selectedChains = List.from(widget.initialChains);
 
@@ -48,16 +57,42 @@ class _FilterPanelState extends State<FilterPanel> {
     _priceRange = RangeValues(minPrice, maxPrice);
 
     _minRating = widget.initialMinRating;
+
+    // Load available tags when filter panel opens
+    _loadAvailableTags();
   }
 
-  // Available options
-  final List<String> _availableTags = [
-    'Vegan', 'Vegetarian', 'Gluten-free', 'Spicy', 'New', 'Popular', 'Healthy'
-  ];
+  Future<void> _loadAvailableTags() async {
+    setState(() {
+      _isLoadingTags = true;
+    });
 
-  final List<String> _availableChains = [
-    'McDonalds', 'KFC', 'Burger King', 'Subway', 'Starbucks', 'Pizza Hut'
-  ];
+    try {
+      final tags = await _tagService.getTagNames();
+      if (mounted) {
+        setState(() {
+          _availableTags = tags;
+        });
+      }
+    } catch (e) {
+      // If there's an error, keep the current tags (which might be empty)
+      // and show an error message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error loading tags: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingTags = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -138,31 +173,36 @@ class _FilterPanelState extends State<FilterPanel> {
           ),
         ),
         const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: _availableTags.map((tag) {
-            final isSelected = _selectedTags.contains(tag);
-            return FilterChip(
-              label: Text(tag),
-              selected: isSelected,
-              onSelected: (selected) {
-                setState(() {
-                  if (selected) {
-                    _selectedTags.add(tag);
-                  } else {
-                    _selectedTags.remove(tag);
-                  }
-                });
-              },
-              backgroundColor: Colors.grey[200],
-              selectedColor: Colors.blue[200],
-              labelStyle: TextStyle(
-                color: isSelected ? Colors.white : Colors.black,
-              ),
-            );
-          }).toList(),
-        ),
+        if (_isLoadingTags)
+          const Center(child: CircularProgressIndicator())
+        else if (_availableTags.isEmpty)
+          const Text('No tags available')
+        else
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: _availableTags.map((tag) {
+              final isSelected = _selectedTags.contains(tag);
+              return FilterChip(
+                label: Text(tag),
+                selected: isSelected,
+                onSelected: (selected) {
+                  setState(() {
+                    if (selected) {
+                      _selectedTags.add(tag);
+                    } else {
+                      _selectedTags.remove(tag);
+                    }
+                  });
+                },
+                backgroundColor: Colors.grey[200],
+                selectedColor: Colors.blue[200],
+                labelStyle: TextStyle(
+                  color: isSelected ? Colors.white : Colors.black,
+                ),
+              );
+            }).toList(),
+          ),
       ],
     );
   }
