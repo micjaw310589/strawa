@@ -27,7 +27,6 @@ class ProductRepository implements Repository<Product>{
       .eq('is_deleted', false)
       .eq('is_active', true)
       .eq('id', id)
-      .order('created_at')
       .limit(1);
     return (data as List)
             .map((json) => Product.fromJson(json))
