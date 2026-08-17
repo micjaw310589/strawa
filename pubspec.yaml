@@ -14,16 +14,8 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
-
-# Custom begins here
   supabase_flutter: ^2.0.0
   decimal: ^3.2.4
-  # drift: ^2.34.1
-  # drift_flutter: ^0.3.0
-  # drift_postgres: ^1.3.1
-  # path_provider: ^2.1.6
-  # sqlite3_flutter_libs: ^0.6.0+eol
-  # uuid: ^4.5.3
 
 dev_dependencies:
   flutter_test:
@@ -31,9 +23,6 @@ dev_dependencies:
 
   flutter_lints: ^6.0.0
 
-# Custom begins here
-  # drift_dev: ^2.34.2+1
-  # build_runner: ^2.15.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
