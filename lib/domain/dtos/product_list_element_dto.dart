@@ -1,5 +1,7 @@
 import 'package:decimal/decimal.dart';
+import 'package:flutter/material.dart';
 
+@immutable
 class ProductListElementDto {
   final String id;
   final String name;
@@ -9,7 +11,7 @@ class ProductListElementDto {
   final double reviewRatingAvg;
   final List<String> tagNames;
 
-  ProductListElementDto({
+  const ProductListElementDto({
     required this.id,
     required this.name,
     this.imageUrl,

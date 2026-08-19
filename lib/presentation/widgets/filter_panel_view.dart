@@ -6,7 +6,7 @@ import 'package:strawa/services/product_service.dart';
 import 'package:strawa/domain/dtos/product_list_element_dto.dart';
 import 'package:strawa/services/tag_service.dart';
 
-class FilterPanel extends StatefulWidget {
+class FilterPanelView extends StatefulWidget {
   final List<String> initialTags;
   final List<String> initialChains;
   final double initialMinPrice;
@@ -14,7 +14,7 @@ class FilterPanel extends StatefulWidget {
   final double initialMinRating;
   final Function(List<ProductListElementDto>, List<String>, List<String>, double, double, double) onFiltersApplied;
 
-  const FilterPanel({
+  const FilterPanelView({
     super.key,
     required this.onFiltersApplied,
     this.initialTags = const [],
@@ -25,10 +25,10 @@ class FilterPanel extends StatefulWidget {
   });
 
   @override
-  State<FilterPanel> createState() => _FilterPanelState();
+  State<FilterPanelView> createState() => _FilterPanelViewState();
 }
 
-class _FilterPanelState extends State<FilterPanel> {
+class _FilterPanelViewState extends State<FilterPanelView> {
   final ProductService _productService = ProductService();
   final TagService _tagService = TagService();
   final ChainService _chainService = ChainService();

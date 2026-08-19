@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:decimal/decimal.dart';
 import 'package:strawa/presentation/widgets/product_tile_view.dart';
-import 'package:strawa/presentation/widgets/filter_panel.dart';
+import 'package:strawa/presentation/widgets/filter_panel_view.dart';
 import 'package:strawa/presentation/widgets/product_tile_viewmodel.dart';
 import 'package:strawa/services/product_service.dart';
 import 'package:strawa/domain/dtos/product_list_element_dto.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeScreenView extends StatefulWidget {
+  const HomeScreenView({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeScreenView> createState() => _HomeScreenViewState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenViewState extends State<HomeScreenView> {
   final _scrollController = ScrollController();
   final _productService = ProductService();
   List<ProductListElementDto> _products = [];
@@ -88,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (context) => FilterPanel(
+      builder: (context) => FilterPanelView(
         initialTags: _selectedTags,
         initialChains: _selectedChains,
         initialMinPrice: _minPrice,

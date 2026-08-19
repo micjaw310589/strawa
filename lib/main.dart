@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:strawa/presentation/home_screen.dart';
+import 'package:strawa/presentation/home_screen_view.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Products',
-      home: HomeScreen(),
+      home: HomeScreenView(),
     );
   }
 }
