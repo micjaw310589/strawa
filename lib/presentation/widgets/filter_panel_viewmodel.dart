@@ -17,7 +17,7 @@ class FilterPanelViewModel extends ChangeNotifier {
   String _errorMessage = "";
 
   final Filters _initialFilters; 
-  Filters _selectedFilters;
+  late Filters _selectedFilters;
 
   final Function(List<ProductListElementDto>, List<String>, List<String>, double, double, double) onFiltersApplied;
 
@@ -26,7 +26,7 @@ class FilterPanelViewModel extends ChangeNotifier {
     required this._initialFilters,
     required this.onFiltersApplied
   });
-
+  
 
   Future<void> _loadAvailableTagsAndChains() async {
     // powiadom że pobierasz dane z bazy
