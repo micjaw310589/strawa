@@ -6,7 +6,6 @@ import 'package:strawa/services/product_service.dart';
 import 'package:strawa/services/tag_service.dart';
 
 class FilterPanelViewModel extends ChangeNotifier {
-  final ProductService _productService;
   final TagService _tagService = TagService();
   final ChainService _chainService = ChainService();
 
@@ -16,32 +15,31 @@ class FilterPanelViewModel extends ChangeNotifier {
   bool _isLoadingChains = false;
   String _errorMessage = "";
 
-  final Filters _initialFilters; 
   late Filters _selectedFilters;
 
-  final Function(List<ProductListElementDto>, List<String>, List<String>, double, double, double) onFiltersApplied;
+  final Function(Filters filters) onFiltersApplied;
 
   FilterPanelViewModel({
-    required this._productService,
-    required this._initialFilters,
+    required Filters initialFilters,
     required this.onFiltersApplied
-  });
+  }) : 
+    _selectedFilters = initialFilters;
   
 
   Future<void> _loadAvailableTagsAndChains() async {
-    // powiadom że pobierasz dane z bazy
+    // set flags for fetch operation status
     _isLoadingTags = true;
     _isLoadingChains = true;
     _errorMessage = "";
     notifyListeners();
     
-    // pobierz tagi
+    // get tags
     try{
       _availableTags = await _tagService.getTagNames();
     }
     catch (e) {
       _availableTags = [];
-      if (_errorMessage != "") {
+      if (_errorMessage.isNotEmpty) {
         _errorMessage += "\nCouldn't retrieve tags: ${e.toString()}";
       }
       else {
@@ -53,12 +51,18 @@ class FilterPanelViewModel extends ChangeNotifier {
       notifyListeners();
     }
 
-    // pobierz chainy
+    // get chains
     try{
       _availableChains = await _chainService.getChainNames();
     }
-    on Exception {
+    catch (e) {
       _availableChains = [];
+      if (_errorMessage.isNotEmpty) {
+        _errorMessage += "\nCouldn't retrieve chains: ${e.toString()}";
+      }
+      else {
+        _errorMessage = "Couldn't retrieve chains: ${e.toString()}";
+      }
     }
     finally {
       _isLoadingChains = false;
@@ -66,4 +70,13 @@ class FilterPanelViewModel extends ChangeNotifier {
     }
   }
 
+  void _clearFilters() {
+      _selectedFilters = Filters();
+  }
+
+  void _applyFilters() {
+    onFiltersApplied(
+      _selectedFilters
+    );
+  }
 }
