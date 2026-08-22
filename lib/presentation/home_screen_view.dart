@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:decimal/decimal.dart';
 import 'package:strawa/presentation/widgets/product_tile_view.dart';
-import 'package:strawa/presentation/widgets/filter_panel_view.dart';
+import 'package:strawa/presentation/filters_screen_view.dart';
 import 'package:strawa/presentation/widgets/product_tile_viewmodel.dart';
 import 'package:strawa/services/product_service.dart';
 import 'package:strawa/domain/dtos/product_list_element_dto.dart';
@@ -62,11 +62,6 @@ class _HomeScreenViewState extends State<HomeScreenView> {
       List<ProductListElementDto> nextPage = await _productService.getProductsForMainList(
         page: _page,
         pageSize: _pageLimit,
-        tagNames: _selectedTags,
-        chainNames: _selectedChains,
-        minPrice: Decimal.fromInt(_minPrice.toInt()),
-        maxPrice: Decimal.fromInt(_maxPrice.toInt()),
-        minRating: _minRating,
       );
       if (!mounted) return;
 
@@ -88,25 +83,7 @@ class _HomeScreenViewState extends State<HomeScreenView> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (context) => FilterPanelView(
-        initialTags: _selectedTags,
-        initialChains: _selectedChains,
-        initialMinPrice: _minPrice,
-        initialMaxPrice: _maxPrice,
-        initialMinRating: _minRating,
-        onFiltersApplied: (filteredProducts, selectedTags, selectedChains, minPrice, maxPrice, minRating) {
-          setState(() {
-            _products = filteredProducts;
-            _selectedTags = selectedTags;
-            _selectedChains = selectedChains;
-            _minPrice = minPrice;
-            _maxPrice = maxPrice;
-            _minRating = minRating;
-            _page = 1;
-            _hasMore = filteredProducts.length == _pageLimit;
-          });
-        },
-      ),
+      builder: (context) => FiltersScreenView(),
     );
   }
 

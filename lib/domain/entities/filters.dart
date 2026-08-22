@@ -1,3 +1,4 @@
+import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 
 @immutable
@@ -15,4 +16,20 @@ class Filters {
     this.maxPrice = 100.0,
     this.minRating = 0.0,
   });
+
+  Filters copyWith({
+    List<String>? tags,
+    List<String>? chains,
+    double? minPrice,
+    double? maxPrice,
+    double? minRating
+  }) {
+    return Filters(
+      tags: tags ?? this.tags,
+      chains: chains ?? this.chains,
+      minPrice: minPrice ?? this.minPrice,
+      maxPrice: maxPrice ?? this.maxPrice,
+      minRating: minRating ?? this.minRating
+    );
+  }
 }

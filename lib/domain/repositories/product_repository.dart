@@ -1,5 +1,6 @@
 import 'package:decimal/decimal.dart';
 import 'package:strawa/domain/dtos/product_list_element_dto.dart';
+import 'package:strawa/domain/entities/filters.dart';
 import 'package:strawa/domain/entities/product.dart';
 import 'package:strawa/domain/repositories/repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -7,6 +8,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class ProductRepository implements Repository<Product>{
   final SupabaseClient _client = Supabase.instance.client;
 
+  late Filters filters = Filters();
 
   // ============ Basic CRUD ============
 
@@ -53,17 +55,67 @@ class ProductRepository implements Repository<Product>{
 
   // ============ CRUD END ============
 
+  // Future<List<ProductListElementDto>> fetchProductList({
+  //   required int page,
+  //   int pageSize = 20,
+  //   List<String> tagNames = const [],
+  //   List<String> chainNames = const [],
+  //   Decimal? minPrice,
+  //   Decimal? maxPrice,
+  //   double minRating = 0.0,
+  //   double maxRating = 5.0
+  // }) async {
+  //   if (page < 0){
+  //     throw Exception("Page cannot be lower than 0");
+  //   }
+  //   if (pageSize < 0){
+  //     throw Exception("Page size cannot be lower than 0");
+  //   }
+  //   if (pageSize > 100){
+  //     throw Exception("Page size limit set to 100");
+  //   }
 
+  //   minPrice = minPrice ?? Decimal.zero;
+  //   maxPrice = maxPrice ?? Decimal.fromInt(100);
+
+  //   final from = (page-1) * pageSize;
+  //   final to = from + pageSize - 1;
+
+  //   var query = _client.from('products')
+  //     .select('''
+  //       id,
+  //       name,
+  //       image_url,
+  //       price,
+  //       chains!inner( name ),
+  //       tags!inner( name ),
+  //       average_rating
+  //     ''')
+  //     .eq('is_deleted', false)
+  //     .eq('is_active', true)
+  //     .gte('price', minPrice.toDouble())
+  //     .lte('price', maxPrice.toDouble())
+  //     .gte('average_rating', minRating)
+  //     .lte('average_rating', maxRating);
+
+  //   if (tagNames.isNotEmpty){
+  //     query = query.inFilter('tags.name', tagNames);
+  //   }
+  //   if (chainNames.isNotEmpty){
+  //     query = query.inFilter('chains.name', chainNames);
+  //   }
+
+  //   final data = await query
+  //     .order('average_rating', ascending: false)
+  //     .range(from, to);
+
+
+  //   return (data as List).map((json) => ProductListElementDto.fromJson(json)).toList();
+  // }
 
   Future<List<ProductListElementDto>> fetchProductList({
     required int page,
-    int pageSize = 20,
-    List<String> tagNames = const [],
-    List<String> chainNames = const [],
-    Decimal? minPrice,
-    Decimal? maxPrice,
-    double minRating = 0.0,
-    double maxRating = 5.0
+    int pageSize = 20
   }) async {
     if (page < 0){
       throw Exception("Page cannot be lower than 0");
@@ -75,8 +127,8 @@ class ProductRepository implements Repository<Product>{
       throw Exception("Page size limit set to 100");
     }
 
-    minPrice = minPrice ?? Decimal.zero;
-    maxPrice = maxPrice ?? Decimal.fromInt(100);
+    final minPrice = Decimal.parse(filters.minPrice.toString());
+    final maxPrice = Decimal.parse(filters.maxPrice.toString());
 
     final from = (page-1) * pageSize;
     final to = from + pageSize - 1;
@@ -95,14 +147,13 @@ class ProductRepository implements Repository<Product>{
       .eq('is_active', true)
       .gte('price', minPrice.toDouble())
       .lte('price', maxPrice.toDouble())
-      .gte('average_rating', minRating)
-      .lte('average_rating', maxRating);
+      .gte('average_rating', filters.minRating);
 
-    if (tagNames.isNotEmpty){
-      query = query.inFilter('tags.name', tagNames);
+    if (filters.tags.isNotEmpty){
+      query = query.inFilter('tags.name', filters.tags);
     }
-    if (chainNames.isNotEmpty){
-      query = query.inFilter('chains.name', chainNames);
+    if (filters.chains.isNotEmpty){
+      query = query.inFilter('chains.name', filters.chains);
     }
 
     final data = await query
@@ -112,4 +163,5 @@ class ProductRepository implements Repository<Product>{
 
     return (data as List).map((json) => ProductListElementDto.fromJson(json)).toList();
   }
+
 }
