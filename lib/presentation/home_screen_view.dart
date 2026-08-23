@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:decimal/decimal.dart';
 import 'package:strawa/presentation/widgets/product_tile_view.dart';
 import 'package:strawa/presentation/filters_screen_view.dart';
 import 'package:strawa/presentation/widgets/product_tile_viewmodel.dart';

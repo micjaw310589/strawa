@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:strawa/domain/dtos/product_list_element_dto.dart';
 import 'package:strawa/domain/entities/filters.dart';
 import 'package:strawa/services/chain_service.dart';
 import 'package:strawa/services/product_service.dart';
@@ -81,35 +80,23 @@ class FitlersScreenViewModel extends ChangeNotifier {
   }
 
   void addTag(String tag) {
-    List<String> temp = selected.tags;
-    temp.add(tag);
-    selected = selected.copyWith(tags: temp);
+    selected = selected.copyWith(tags: [...selected.tags, tag]);
     notifyListeners();
   }
 
   void removeTag(String tag) {
-    if (selected.tags.contains(tag)) {
-      List<String> temp = selected.tags;
-      temp.remove(tag);
-      selected = selected.copyWith(tags: temp);
-      notifyListeners();
-    }
-  }
-
-  void addChain(String chains) {
-    List<String> temp = selected.chains;
-    temp.add(chains);
-    selected = selected.copyWith(chains: temp);
+    selected = selected.copyWith(tags: selected.tags.where((t) => t != tag).toList());
     notifyListeners();
   }
 
-  void removeChain(String chains) {
-    if (selected.chains.contains(chains)) {
-      List<String> temp = selected.chains;
-      temp.remove(chains);
-      selected = selected.copyWith(chains: temp);
-      notifyListeners();
-    }
+  void addChain(String chain) {
+    selected = selected.copyWith(chains: [...selected.chains, chain]);
+    notifyListeners();
+  }
+
+  void removeChain(String chain) {
+    selected = selected.copyWith(chains: selected.tags.where((c) => c != chain).toList());
+    notifyListeners();
   }
 
   void updatePriceRange(double min, double max) {
