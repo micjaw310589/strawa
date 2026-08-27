@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:strawa/presentation/screens/home_screen.dart';
+import 'package:strawa/presentation/home_screen_view.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({super.key});
@@ -33,7 +33,7 @@ class NavBar extends StatelessWidget {
               icon: Icons.home,
               label: 'Home',
               enabled: true,
-              onTap: () => _switchTo(context, const HomeScreen()),
+              onTap: () => _switchTo(context, const HomeScreenView()),
             ),
             _buildItem(
               icon: Icons.restaurant,
