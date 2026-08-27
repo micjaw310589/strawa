@@ -1,7 +1,8 @@
 import 'package:strawa/domain/repositories/tag_repository.dart';
+import 'package:strawa/locator.dart';
 
 class TagService {
-  final _tagRepository = TagRepository();
+  final _tagRepository = locator<TagRepository>();
 
   Future<List<String>> getTagNames() async {
     try {

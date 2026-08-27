@@ -1,7 +1,8 @@
 import 'package:strawa/domain/repositories/chain_repository.dart';
+import 'package:strawa/locator.dart';
 
 class ChainService {
-  final _chainRepository = ChainRepository();
+  final _chainRepository = locator<ChainRepository>();
 
   Future<List<String>> getChainNames() async {
     try {
