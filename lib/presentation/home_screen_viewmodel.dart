@@ -6,18 +6,19 @@ import 'package:strawa/services/product_service.dart';
 
 class HomeScreenViewModel extends ChangeNotifier {
   final _productService = ProductService();
+
+  final List<ProductListElementDto> _products = [];
   bool _isLoading = false;
   bool _hasMore = true;
   int _page = 1;
   final int _pageLimit;
 
-  final List<ProductListElementDto> _products = [];
-  UnmodifiableListView<ProductListElementDto> get products => UnmodifiableListView(_products);
-
   HomeScreenViewModel({
     this._pageLimit = 20,
   });
 
+  UnmodifiableListView<ProductListElementDto> get products => UnmodifiableListView(_products);
+  bool get hasMore => _hasMore;
 
   Future<void> fetchPageContent() async {
     if (!_isLoading && _hasMore) {
@@ -37,7 +38,7 @@ class HomeScreenViewModel extends ChangeNotifier {
         notifyListeners();
       }
 
-      // add fetched content to page list
+      // add fetched content to page list and notify of the end of operation
       _products.addAll(nextPage);
       _isLoading = false;
       _page++;

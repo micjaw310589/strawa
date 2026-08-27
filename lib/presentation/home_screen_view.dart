@@ -22,49 +22,16 @@ class _HomeScreenViewState extends State<HomeScreenView> {
     super.initState();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent){
-        _fetchPage();
+        _viewModel.fetchPageContent();
       }
     });
-    _fetchPage();
+    _viewModel.fetchPageContent();
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
-  }
-
-  Future<void> _refresh() async {
-    _page = 1;
-    _hasMore = true;
-    _products.clear();
-    await _fetchPage();
-  }
-
-  Future<void> _fetchPage() async {
-    if (!_isLoading && _hasMore){
-      setState(() {
-        _isLoading = true;
-      });
-
-      List<ProductListElementDto> nextPage = await _productService.getProductsForMainList(
-        page: _page,
-        pageSize: _pageLimit,
-      );
-      if (!mounted) return;
-
-      if (nextPage.length < _pageLimit) {
-        setState(() {
-          _hasMore = false;
-        });
-      }
-
-      setState(() {
-        _products.addAll(nextPage);
-        _isLoading = false;
-        _page++;
-      });
-    }
   }
 
   void _showFilterPanel() {
@@ -93,7 +60,7 @@ class _HomeScreenViewState extends State<HomeScreenView> {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: _refresh,
+            onPressed: _viewModel.refresh,
             tooltip: 'Odśwież listę produktów',
           ),
         ],
@@ -101,17 +68,17 @@ class _HomeScreenViewState extends State<HomeScreenView> {
       body: Stack(
         children: [
           RefreshIndicator(
-            onRefresh: _refresh,
+            onRefresh: _viewModel.refresh,
             child: ListView.builder(
               controller: _scrollController,
               padding: const EdgeInsets.only(top: 8.0, bottom: 80.0),
-              itemCount: _products.length + (_hasMore ? 1 : 0),
+              itemCount: _viewModel.products.length + (_viewModel.hasMore ? 1 : 0),
               itemBuilder: (context, index) {
-                if (index == _products.length) {
+                if (index == _viewModel.products.length) {
                   return Center(child: CircularProgressIndicator());
                 }
                 return ProductTileView(
-                    viewModel: ProductTileViewModel(product: _products[index])
+                    viewModel: ProductTileViewModel(product: _viewModel.products[index])
                 );
               }
             )
