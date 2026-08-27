@@ -1,14 +1,12 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:strawa/domain/dtos/product_list_element_dto.dart';
+import 'package:strawa/presentation/widgets/product_tile_viewmodel.dart';
 
-class ProductTile extends StatelessWidget {
-  final ProductListElementDto product;
+class ProductTileView extends StatelessWidget {
+  final ProductTileViewModel viewModel;
 
-  const ProductTile({
+  const ProductTileView({
     super.key,
-    required this.product
+    required this.viewModel
   });
 
   @override
@@ -45,11 +43,11 @@ class ProductTile extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.0),
                   color: Colors.grey[200],
                 ),
-                child: product.imageUrl != null
+                child: viewModel.product.imageUrl != null
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),
                         child: Image.network(
-                          product.imageUrl!,
+                          viewModel.product.imageUrl!,
                           fit: BoxFit.cover,
                           width: 80,
                           height: 80,
@@ -78,7 +76,7 @@ class ProductTile extends StatelessWidget {
                   children: [
                     // Product Name
                     Text(
-                      product.name,
+                      viewModel.product.name,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -89,9 +87,9 @@ class ProductTile extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     // Price
-                    if (product.price != null)
+                    if (viewModel.product.price != null)
                       Text(
-                        '${product.price!.toStringAsFixed(2)} zł',
+                        '${viewModel.product.price!.toStringAsFixed(2)} zł',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -103,7 +101,7 @@ class ProductTile extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          product.chainName,
+                          viewModel.product.chainName,
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[600],
@@ -119,7 +117,7 @@ class ProductTile extends StatelessWidget {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              product.reviewRatingAvg.toStringAsFixed(1),
+                              viewModel.product.reviewRatingAvg.toStringAsFixed(1),
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -131,11 +129,11 @@ class ProductTile extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     // Tags
-                    if (product.tagNames.isNotEmpty)
+                    if (viewModel.product.tagNames.isNotEmpty)
                       Wrap(
                         spacing: 6,
                         runSpacing: 4,
-                        children: product.tagNames.map((tag) => Container(
+                        children: viewModel.product.tagNames.map((tag) => Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
                             color: Colors.blue[50],
