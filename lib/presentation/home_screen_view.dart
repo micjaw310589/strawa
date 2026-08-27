@@ -3,8 +3,6 @@ import 'package:strawa/presentation/home_screen_viewmodel.dart';
 import 'package:strawa/presentation/widgets/product_tile_view.dart';
 import 'package:strawa/presentation/filters_screen_view.dart';
 import 'package:strawa/presentation/widgets/product_tile_viewmodel.dart';
-import 'package:strawa/services/product_service.dart';
-import 'package:strawa/domain/dtos/product_list_element_dto.dart';
 
 class HomeScreenView extends StatefulWidget {
   const HomeScreenView({super.key});
@@ -37,12 +35,13 @@ class _HomeScreenViewState extends State<HomeScreenView> {
     super.dispose();
   }
 
-  void _showFilterPanel() {
-    showModalBottomSheet(
+  Future<void> _showFilterPanel() async {
+    await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (context) => FiltersScreenView(),
     );
+    _viewModel.refresh();
   }
 
   @override
@@ -68,35 +67,39 @@ class _HomeScreenViewState extends State<HomeScreenView> {
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          RefreshIndicator(
-            onRefresh: _viewModel.refresh,
-            child: ListView.builder(
-              controller: _scrollController,
-              padding: const EdgeInsets.only(top: 8.0, bottom: 80.0),
-              itemCount: _viewModel.products.length + (_viewModel.hasMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index == _viewModel.products.length) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                return ProductTileView(
-                    viewModel: ProductTileViewModel(product: _viewModel.products[index])
-                );
-              }
-            )
-          ),
-          Positioned(
-            bottom: 16,
-            right: 16,
-            child: FloatingActionButton(
-              onPressed: _showFilterPanel,
-              backgroundColor: Colors.blue,
-              child: const Icon(Icons.filter_list, color: Colors.white),
-            ),
-          ),
-        ],
-      ),
+      body: ListenableBuilder(
+        listenable: _viewModel,
+        builder: (context, child) {
+          return Stack(
+            children: [
+              RefreshIndicator(
+                onRefresh: _viewModel.refresh,
+                child: ListView.builder(
+                  controller: _scrollController,
+                  padding: const EdgeInsets.only(top: 8.0, bottom: 80.0),
+                  itemCount: _viewModel.products.length + (_viewModel.hasMore ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index == _viewModel.products.length) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    return ProductTileView(
+                        viewModel: ProductTileViewModel(product: _viewModel.products[index])
+                    );
+                  }
+                )
+              ),
+              Positioned(
+                bottom: 16,
+                right: 16,
+                child: FloatingActionButton(
+                  onPressed: _showFilterPanel,
+                  backgroundColor: Colors.blue,
+                  child: const Icon(Icons.filter_list, color: Colors.white),
+                ),
+              ),
+            ],
+          );
+      })
     );
   }
 }
