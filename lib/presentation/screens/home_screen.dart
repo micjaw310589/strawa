@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:decimal/decimal.dart';
 import 'package:strawa/presentation/widgets/product_tile.dart';
 import 'package:strawa/presentation/widgets/filter_panel.dart';
+import 'package:strawa/presentation/widgets/nav_bar.dart';
 import 'package:strawa/services/product_service.dart';
 import 'package:strawa/domain/dtos/product_list_element_dto.dart';
 
@@ -161,6 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+      bottomNavigationBar: const NavBar(),
     );
   }
 }
