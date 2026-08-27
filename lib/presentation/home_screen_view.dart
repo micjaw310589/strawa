@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:strawa/presentation/home_screen_viewmodel.dart';
 import 'package:strawa/presentation/widgets/product_tile_view.dart';
 import 'package:strawa/presentation/filters_screen_view.dart';
 import 'package:strawa/presentation/widgets/product_tile_viewmodel.dart';
@@ -13,20 +14,8 @@ class HomeScreenView extends StatefulWidget {
 }
 
 class _HomeScreenViewState extends State<HomeScreenView> {
+  late final HomeScreenViewModel _viewModel;
   final _scrollController = ScrollController();
-  final _productService = ProductService();
-  List<ProductListElementDto> _products = [];
-  bool _isLoading = false;
-  bool _hasMore = true;
-  int _page = 1;
-  final int _pageLimit = 20;
-
-  // Filter state
-  List<String> _selectedTags = [];
-  List<String> _selectedChains = [];
-  double _minPrice = 0.0;
-  double _maxPrice = 100.0;
-  double _minRating = 0.0;
 
   @override
   void initState() {
