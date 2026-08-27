@@ -27,7 +27,7 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
 
     // Ensure price range values are within the slider's min/max bounds
     final minPrice = _viewModel.selectedFilters.minPrice.clamp(0.0, 100.0);
-    final maxPrice = _viewModel.selectedFilters.minPrice.clamp(0.0, 100.0);
+    final maxPrice = _viewModel.selectedFilters.maxPrice.clamp(0.0, 100.0);
     if (!_viewModel.isPriceRangeSame(minPrice, maxPrice)) {
       _viewModel.updatePriceRange(minPrice, maxPrice);
     }

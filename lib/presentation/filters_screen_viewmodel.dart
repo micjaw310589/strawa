@@ -80,7 +80,6 @@ class FitlersScreenViewModel extends ChangeNotifier {
     }
     catch(e) {
       errorMessage = "Service failed to set filters: ${e.toString()}";
-      print(errorMessage);
       notifyListeners();
     }
     onFiltersApplied();
