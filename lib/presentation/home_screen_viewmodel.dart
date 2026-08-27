@@ -1,11 +1,11 @@
 import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:strawa/domain/dtos/product_list_element_dto.dart';
+import 'package:strawa/locator.dart';
 import 'package:strawa/services/product_service.dart';
 
 class HomeScreenViewModel extends ChangeNotifier {
-  final _productService = ProductService();
+  final _productService = locator<ProductService>();
 
   final List<ProductListElementDto> _products = [];
   bool _isLoading = false;
@@ -20,7 +20,7 @@ class HomeScreenViewModel extends ChangeNotifier {
   UnmodifiableListView<ProductListElementDto> get products => UnmodifiableListView(_products);
   bool get hasMore => _hasMore;
 
-  Future<void> fetchPageContent() async {
+  Future<void> fetchPage() async {
     if (!_isLoading && _hasMore) {
       // tell the view you are loading content
       _isLoading = true;
@@ -35,7 +35,6 @@ class HomeScreenViewModel extends ChangeNotifier {
       // if less content than page limit, then there's no more to load
       if (nextPage.length < _pageLimit){
         _hasMore = false;
-        notifyListeners();
       }
 
       // add fetched content to page list and notify of the end of operation
@@ -50,7 +49,7 @@ class HomeScreenViewModel extends ChangeNotifier {
     _page = 1;
     _hasMore = true;
     _products.clear();
-    await fetchPageContent();
+    await fetchPage();
   }
 
 }

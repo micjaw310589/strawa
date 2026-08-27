@@ -31,4 +31,9 @@ class Filters {
       minRating: minRating ?? this.minRating
     );
   }
+
+  @override
+  String toString() {
+    return "Tag count: ${tags.length}\nChain count: ${chains.length}\nmin: $minPrice\nmax: $maxPrice\nrating: $minRating\n";
+  }
 }

@@ -20,12 +20,15 @@ class _HomeScreenViewState extends State<HomeScreenView> {
   @override
   void initState() {
     super.initState();
+
+    _viewModel = HomeScreenViewModel();
+
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent){
-        _viewModel.fetchPageContent();
+        _viewModel.fetchPage();
       }
     });
-    _viewModel.fetchPageContent();
+    _viewModel.fetchPage();
   }
 
   @override

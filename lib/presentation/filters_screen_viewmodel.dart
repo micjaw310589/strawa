@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:strawa/domain/entities/filters.dart';
+import 'package:strawa/locator.dart';
 import 'package:strawa/services/chain_service.dart';
 import 'package:strawa/services/product_service.dart';
 import 'package:strawa/services/tag_service.dart';
 
 class FitlersScreenViewModel extends ChangeNotifier {
-  final TagService _tagService = TagService();
-  final ChainService _chainService = ChainService();
-  final ProductService _productService = ProductService();
+  final TagService _tagService = locator<TagService>();
+  final ChainService _chainService = locator<ChainService>();
+  final ProductService _productService = locator<ProductService>();
 
   final Function onFiltersApplied;
 
-  late Filters selected = _productService.filters;
+  late Filters selectedFilters = _productService.filters;
 
   List<String> tags = [];
   List<String> chains = [];
@@ -24,7 +25,6 @@ class FitlersScreenViewModel extends ChangeNotifier {
     required this.onFiltersApplied
   });
   
-
   Future<void> loadTagsAndChains() async {
     // set flags for fetch operation status
     isLoadingTags = true;
@@ -70,46 +70,53 @@ class FitlersScreenViewModel extends ChangeNotifier {
   }
 
   void clearFilters() {
-    selected = Filters();
+    selectedFilters = Filters();
     notifyListeners();
   }
 
   void applyFilters() {
-    _productService.filters = selected;
+    try {
+      _productService.filters = selectedFilters;
+    }
+    catch(e) {
+      errorMessage = "Service failed to set filters: ${e.toString()}";
+      print(errorMessage);
+      notifyListeners();
+    }
     onFiltersApplied();
   }
 
   void addTag(String tag) {
-    selected = selected.copyWith(tags: [...selected.tags, tag]);
+    selectedFilters = selectedFilters.copyWith(tags: [...selectedFilters.tags, tag]);
     notifyListeners();
   }
 
   void removeTag(String tag) {
-    selected = selected.copyWith(tags: selected.tags.where((t) => t != tag).toList());
+    selectedFilters = selectedFilters.copyWith(tags: selectedFilters.tags.where((t) => t != tag).toList());
     notifyListeners();
   }
 
   void addChain(String chain) {
-    selected = selected.copyWith(chains: [...selected.chains, chain]);
+    selectedFilters = selectedFilters.copyWith(chains: [...selectedFilters.chains, chain]);
     notifyListeners();
   }
 
   void removeChain(String chain) {
-    selected = selected.copyWith(chains: selected.tags.where((c) => c != chain).toList());
+    selectedFilters = selectedFilters.copyWith(chains: selectedFilters.tags.where((c) => c != chain).toList());
     notifyListeners();
   }
 
   void updatePriceRange(double min, double max) {
-    selected = selected.copyWith(minPrice: min, maxPrice: max);
+    selectedFilters = selectedFilters.copyWith(minPrice: min, maxPrice: max);
     notifyListeners();
   }
 
   void updateMinRating(double minRating) {
-    selected = selected.copyWith(minRating: minRating);
+    selectedFilters = selectedFilters.copyWith(minRating: minRating);
     notifyListeners();
   }
 
   bool isPriceRangeSame(double min, double max) {
-    return selected.minPrice == min && selected.maxPrice == max;
+    return selectedFilters.minPrice == min && selectedFilters.maxPrice == max;
   }
 }

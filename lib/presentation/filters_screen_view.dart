@@ -18,12 +18,16 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
     super.initState();
 
     _viewModel = FitlersScreenViewModel(
-      onFiltersApplied: () => Navigator.pop(context)
+
+      onFiltersApplied: () {
+        print(_viewModel.selectedFilters);
+        Navigator.pop(context);
+      }
     );
 
     // Ensure price range values are within the slider's min/max bounds
-    final minPrice = _viewModel.selected.minPrice.clamp(0.0, 100.0);
-    final maxPrice = _viewModel.selected.minPrice.clamp(0.0, 100.0);
+    final minPrice = _viewModel.selectedFilters.minPrice.clamp(0.0, 100.0);
+    final maxPrice = _viewModel.selectedFilters.minPrice.clamp(0.0, 100.0);
     if (!_viewModel.isPriceRangeSame(minPrice, maxPrice)) {
       _viewModel.updatePriceRange(minPrice, maxPrice);
     }
@@ -125,7 +129,7 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
             spacing: 8,
             runSpacing: 8,
             children: _viewModel.tags.map((tag) {
-              final isSelected = _viewModel.selected.tags.contains(tag);
+              final isSelected = _viewModel.selectedFilters.tags.contains(tag);
               return FilterChip(
                 label: Text(tag),
                 selected: isSelected,
@@ -171,7 +175,7 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
             spacing: 8,
             runSpacing: 8,
             children: _viewModel.chains.map((chain) {
-              final isSelected = _viewModel.selected.chains.contains(chain);
+              final isSelected = _viewModel.selectedFilters.chains.contains(chain);
               return FilterChip(
                 label: Text(chain),
                 selected: isSelected,
@@ -209,13 +213,13 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
         ),
         const SizedBox(height: 8),
         RangeSlider(
-          values: RangeValues(_viewModel.selected.minPrice, _viewModel.selected.maxPrice),
+          values: RangeValues(_viewModel.selectedFilters.minPrice, _viewModel.selectedFilters.maxPrice),
           min: 0,
           max: 100,
           divisions: 20,
           labels: RangeLabels(
-            '\$${_viewModel.selected.minPrice.round()}',
-            '\$${_viewModel.selected.maxPrice.round()}',
+            '\$${_viewModel.selectedFilters.minPrice.round()}',
+            '\$${_viewModel.selectedFilters.maxPrice.round()}',
           ),
           onChanged: (values) {
             _viewModel.updatePriceRange(values.start, values.end);
@@ -224,8 +228,8 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('\$${_viewModel.selected.minPrice.round()}'),
-            Text('\$${_viewModel.selected.maxPrice.round()}'),
+            Text('\$${_viewModel.selectedFilters.minPrice.round()}'),
+            Text('\$${_viewModel.selectedFilters.maxPrice.round()}'),
           ],
         ),
       ],
@@ -256,7 +260,7 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
   }
 
   Widget _buildRatingButton(double rating, String label) {
-    final isSelected = _viewModel.selected.minRating == rating;
+    final isSelected = _viewModel.selectedFilters.minRating == rating;
     return ChoiceChip(
       label: Text(label),
       selected: isSelected,

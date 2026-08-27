@@ -1,9 +1,10 @@
 import 'package:strawa/domain/dtos/product_list_element_dto.dart';
 import 'package:strawa/domain/entities/filters.dart';
 import 'package:strawa/domain/repositories/product_repository.dart';
+import 'package:strawa/locator.dart';
 
 class ProductService {
-  final _productRepository = ProductRepository();
+  final _productRepository = locator<ProductRepository>();
 
   Filters get filters => _productRepository.filters;
   set filters(Filters f) {
