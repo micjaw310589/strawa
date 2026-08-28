@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:strawa/presentation/home_screen_viewmodel.dart';
 import 'package:strawa/presentation/widgets/product_tile_view.dart';
+import 'package:strawa/presentation/widgets/nav_bar.dart';
 import 'package:strawa/presentation/filters_screen_view.dart';
 import 'package:strawa/presentation/widgets/product_tile_viewmodel.dart';
 
@@ -99,7 +100,8 @@ class _HomeScreenViewState extends State<HomeScreenView> {
               ),
             ],
           );
-      })
+      }),
+      bottomNavigationBar: const NavBar()
     );
   }
 }
