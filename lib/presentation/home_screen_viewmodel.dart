@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:strawa/domain/dtos/product_list_element_dto.dart';
 import 'package:strawa/locator.dart';
 import 'package:strawa/services/product_service.dart';
+import 'package:strawa/presentation/widgets/nav_bar_viewmodel.dart';
 
 class HomeScreenViewModel extends ChangeNotifier {
   final _productService = locator<ProductService>();
+  final _navBarViewModel = locator<NavBarViewModel>();
 
   final List<ProductListElementDto> _products = [];
   bool _isLoading = false;
@@ -15,7 +17,9 @@ class HomeScreenViewModel extends ChangeNotifier {
 
   HomeScreenViewModel({
     this._pageLimit = 20,
-  });
+  }) {
+    _navBarViewModel.setActiveItem(NavBarItem.home);
+  }
 
   UnmodifiableListView<ProductListElementDto> get products => UnmodifiableListView(_products);
   bool get hasMore => _hasMore;

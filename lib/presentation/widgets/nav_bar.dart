@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:strawa/locator.dart';
 import 'package:strawa/presentation/home_screen_view.dart';
+import 'package:strawa/presentation/map_screen_view.dart';
+import 'package:strawa/presentation/strawa_day_screen_view.dart';
+import 'package:strawa/presentation/widgets/nav_bar_viewmodel.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final NavBarViewModel viewModel = locator<NavBarViewModel>();
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -20,29 +26,35 @@ class NavBar extends StatelessWidget {
       ),
       child: SafeArea(
         top: false,
-        child: Row(
-          children: [
-            _buildItem(
-              icon: Icons.map,
-              label: 'Mapa',
-              enabled: false, // wyłączony: widok Mapa jeszcze nie istnieje
-              // TODO: odkomentować po utworzeniu MapScreen
-              // onTap: () => _switchTo(context, const MapScreen()),
-            ),
-            _buildItem(
-              icon: Icons.home,
-              label: 'Home',
-              enabled: true,
-              onTap: () => _switchTo(context, const HomeScreenView()),
-            ),
-            _buildItem(
-              icon: Icons.restaurant,
-              label: 'Strawa Dnia',
-              enabled: false, // wyłączony: widok Strawa Dnia jeszcze nie istnieje
-              // TODO: odkomentować po utworzeniu StrawaDayScreen
-              // onTap: () => _switchTo(context, const StrawaDayScreen()),
-            ),
-          ],
+        child: ListenableBuilder(
+          listenable: viewModel,
+          builder: (context, child) {
+            return Row(
+              children: [
+                _buildItem(
+                  context: context,
+                  viewModel: viewModel,
+                  item: NavBarItem.mapa,
+                  icon: Icons.map,
+                  label: 'Mapa',
+                ),
+                _buildItem(
+                  context: context,
+                  viewModel: viewModel,
+                  item: NavBarItem.home,
+                  icon: Icons.home,
+                  label: 'Home',
+                ),
+                _buildItem(
+                  context: context,
+                  viewModel: viewModel,
+                  item: NavBarItem.strawaDnia,
+                  icon: Icons.restaurant,
+                  label: 'Strawa Dnia',
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -55,16 +67,30 @@ class NavBar extends StatelessWidget {
     );
   }
 
+  Widget _screenFor(NavBarItem item) {
+    switch (item) {
+      case NavBarItem.mapa:
+        return const MapScreenView();
+      case NavBarItem.home:
+        return const HomeScreenView();
+      case NavBarItem.strawaDnia:
+        return const StrawaDayScreenView();
+    }
+  }
+
   Widget _buildItem({
+    required BuildContext context,
+    required NavBarViewModel viewModel,
+    required NavBarItem item,
     required IconData icon,
     required String label,
-    required bool enabled,
-    VoidCallback? onTap,
   }) {
-    final Color color = enabled ? Colors.blue : Colors.grey;
+    final bool isCurrent = viewModel.isCurrent(item);
+    final Color color = isCurrent ? Colors.blue : Colors.grey;
+
     return Expanded(
       child: InkWell(
-        onTap: enabled ? onTap : null,
+        onTap: isCurrent ? null : () => _switchTo(context, _screenFor(item)),
         child: SizedBox(
           height: 56.0,
           child: Column(
@@ -76,7 +102,7 @@ class NavBar extends StatelessWidget {
                 label,
                 style: TextStyle(
                   fontSize: 11,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: isCurrent ? FontWeight.w700 : FontWeight.w500,
                   color: color,
                 ),
               ),

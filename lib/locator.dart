@@ -5,10 +5,14 @@ import 'package:strawa/domain/repositories/chain_repository.dart';
 import 'package:strawa/services/product_service.dart';
 import 'package:strawa/services/tag_service.dart';
 import 'package:strawa/services/chain_service.dart';
+import 'package:strawa/presentation/widgets/nav_bar_viewmodel.dart';
 
 // tworzy tylko 1 instancje
 final locator = GetIt.instance;
 void setupLocator() {
+  // Presentation (MVVM) - wspoldzielony stan paska nawigacji
+  locator.registerLazySingleton<NavBarViewModel>(() => NavBarViewModel());
+
   // Repositories
   locator.registerLazySingleton<ProductRepository>(() => ProductRepository());
   locator.registerLazySingleton<TagRepository>(() => TagRepository());
