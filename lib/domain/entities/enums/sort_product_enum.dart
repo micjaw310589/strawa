@@ -7,8 +7,8 @@ enum SortProduct {
   byCarbs,
   byProtein,
   byFat,
-  byMass,
+  byWeight,
   byRatingToPrice,
   byProteinToPrice,
-  byMassToPrice
+  byWeightToPrice
 }
