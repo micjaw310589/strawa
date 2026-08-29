@@ -7,8 +7,10 @@ import 'package:strawa/locator.dart';
 class ProductService {
   final _productRepository = locator<ProductRepository>();
 
-  SortProduct sortBy = SortProduct.byRating;
-  bool sortAscending = false;
+  static final defaultSortBy = SortProduct.byRating;
+  static final defaultSortAscending = false;
+  SortProduct sortBy = defaultSortBy;
+  bool sortAscending = defaultSortAscending;
 
   Filters get filters => _productRepository.filters;
 

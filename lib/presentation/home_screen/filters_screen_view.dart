@@ -20,7 +20,6 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
     _viewModel = FitlersScreenViewModel(
 
       onFiltersApplied: () {
-        print(_viewModel.selectedFilters);
         Navigator.pop(context);
       }
     );
