@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:strawa/presentation/filters_screen_viewmodel.dart';
+import 'package:strawa/presentation/home_screen/filters_screen_viewmodel.dart';
 
 class FiltersScreenView extends StatefulWidget {
   const FiltersScreenView({

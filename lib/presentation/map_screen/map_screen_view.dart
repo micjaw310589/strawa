@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:strawa/presentation/map_screen_viewmodel.dart';
+import 'package:strawa/presentation/map_screen/map_screen_viewmodel.dart';
 import 'package:strawa/presentation/widgets/nav_bar.dart';
 
 class MapScreenView extends StatefulWidget {

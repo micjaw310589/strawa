@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:strawa/locator.dart';
-import 'package:strawa/presentation/home_screen_view.dart';
+import 'package:strawa/presentation/home_screen/home_screen_view.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
