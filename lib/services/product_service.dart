@@ -1,4 +1,5 @@
 import 'package:strawa/domain/dtos/product_list_element_dto.dart';
+import 'package:strawa/domain/entities/enums/sort_product_enum.dart';
 import 'package:strawa/domain/entities/filters.dart';
 import 'package:strawa/domain/repositories/product_repository.dart';
 import 'package:strawa/locator.dart';
@@ -26,11 +27,15 @@ class ProductService {
 
 
   Future<List<ProductListElementDto>> getProductsForMainList({
+    SortProduct sortBy = SortProduct.byRating,
+    bool sortAscending = false,
     required int page,
     int pageSize = 20,
   }) async {
     try{
       final productList = await _productRepository.fetchProductList(
+        sortBy: sortBy,
+        sortAscending: sortAscending,
         page: page,
         pageSize: pageSize
       );
