@@ -7,7 +7,11 @@ import 'package:strawa/locator.dart';
 class ProductService {
   final _productRepository = locator<ProductRepository>();
 
+  SortProduct sortBy = SortProduct.byRating;
+  bool sortAscending = false;
+
   Filters get filters => _productRepository.filters;
+
   set filters(Filters f) {
     if (f.minRating < 0.0){
       throw Exception("Rating can't be lower than 0");
@@ -27,8 +31,6 @@ class ProductService {
 
 
   Future<List<ProductListElementDto>> getProductsForMainList({
-    SortProduct sortBy = SortProduct.byRating,
-    bool sortAscending = false,
     required int page,
     int pageSize = 20,
   }) async {
