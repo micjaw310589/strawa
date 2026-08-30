@@ -48,4 +48,13 @@ class SortingScreenViewModel extends ChangeNotifier {
     onSortingApplied();
   }
 
+  void updateSortingOption(SortProduct selected) {
+    selectedOption = selected;
+    // notifyListeners();
+  }
+
+  void updateSortingOrder(bool isAscending) {
+    selectedOrder = isAscending;
+    // notifyListeners();
+  }
 }
