@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:strawa/presentation/home_screen/home_screen_viewmodel.dart';
+import 'package:strawa/presentation/home_screen/sorting_screen.dart';
 import 'package:strawa/presentation/widgets/product_tile_view.dart';
 import 'package:strawa/presentation/widgets/nav_bar.dart';
 import 'package:strawa/presentation/home_screen/filters_screen_view.dart';
@@ -41,6 +42,16 @@ class _HomeScreenViewState extends State<HomeScreenView> {
       context: context,
       isScrollControlled: true,
       builder: (context) => FiltersScreenView(),
+    );
+    _viewModel.refresh();
+  }
+
+  Future<void> _showSortingPanel() async {
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => SortingScreen(),
+      backgroundColor: Colors.transparent
     );
     _viewModel.refresh();
   }
@@ -92,10 +103,23 @@ class _HomeScreenViewState extends State<HomeScreenView> {
               Positioned(
                 bottom: 16,
                 right: 16,
-                child: FloatingActionButton(
-                  onPressed: _showFilterPanel,
-                  backgroundColor: Colors.blue,
-                  child: const Icon(Icons.filter_list, color: Colors.white),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FloatingActionButton(
+                      heroTag: 'sorting_fab',
+                      onPressed: _showSortingPanel,
+                      backgroundColor: Colors.deepPurple,
+                      child: const Icon(Icons.sort, color: Colors.white),
+                    ),
+                    const SizedBox(height: 12),
+                    FloatingActionButton(
+                      heroTag: 'filter_fab',
+                      onPressed: _showFilterPanel,
+                      backgroundColor: Colors.blue,
+                      child: const Icon(Icons.filter_list, color: Colors.white),
+                    ),
+                  ],
                 ),
               ),
             ],

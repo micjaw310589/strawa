@@ -26,7 +26,7 @@ class _SortingScreenState extends State<SortingScreen> {
   }
 
 
-  @override
+@override
   Widget build(BuildContext context) {
     return ListenableBuilder(
       listenable: _viewModel,
@@ -44,31 +44,33 @@ class _SortingScreenState extends State<SortingScreen> {
               ),
             ],
           ),
-          child: Column(
-            children: [
-              _buildHeader(),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+          child: Material(
+            color: Colors.transparent,
+            child: Column(
+              children: [
+                _buildHeader(),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         _buildOrderRadio(),
                         const SizedBox(height: 20),
-                      _buildOptionsRadio(),
-                      const SizedBox(height: 60),
-                    ],
+                        _buildOptionsRadio(),
+                        const SizedBox(height: 60),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              _buildApplyButton(),
-            ],
+                _buildApplyButton(),
+              ],
+            ),
           ),
         );
-      }
+      },
     );
   }
-
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -94,65 +96,66 @@ class _SortingScreenState extends State<SortingScreen> {
     );
   }
 
-Widget _buildOptionsRadio() {
-  return RadioGroup<SortProduct>(
-    groupValue: _viewModel.selectedOption,
-    onChanged: (SortProduct? value) {
-      if (value != null) {
-        _viewModel.updateSortingOption(value);
-      }
-    },
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Sort By',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+  Widget _buildOptionsRadio() {
+    return RadioGroup<SortProduct>(
+      groupValue: _viewModel.selectedOption,
+      onChanged: (SortProduct? value) {
+        if (value != null) {
+          _viewModel.updateSortingOption(value);
+        }
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Sort By',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        const SizedBox(height: 8),
-        ...SortingScreenViewModel.options.entries.map((entry) {
-          return RadioListTile<SortProduct>(
-            title: Text(entry.value),
-            value: entry.key,
-          );
-        }),
-      ],
-    ),
-  );
-}
+          const SizedBox(height: 8),
+          ...SortingScreenViewModel.options.entries.map((entry) {
+            return RadioListTile<SortProduct>(
+              title: Text(entry.value),
+              value: entry.key,
+            );
+          }),
+        ],
+      ),
+    );
+  }
 
-Widget _buildOrderRadio() {
-  return RadioGroup<bool>(
-    groupValue: _viewModel.selectedOrder,
-    onChanged: (bool? value) {
-      if (value != null) {
-        _viewModel.updateSortingOrder(value);
-      }
-    },
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Sorting Order',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+  Widget _buildOrderRadio() {
+    return RadioGroup<bool>(
+      groupValue: _viewModel.selectedOrder,
+      onChanged: (bool? value) {
+        if (value != null) {
+          _viewModel.updateSortingOrder(value);
+        }
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Sorting Order',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        const SizedBox(height: 8),
-        ...SortingScreenViewModel.order.entries.map((entry) {
-          return RadioListTile<bool>(
-            title: Text(entry.value),
-            value: entry.key,
-          );
-        }),
-      ],
-    ),
-  );
-}
+          const SizedBox(height: 8),
+          ...SortingScreenViewModel.order.entries.map((entry) {
+            return RadioListTile<bool>(
+              title: Text(entry.value),
+              value: entry.key,
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
   Widget _buildApplyButton() {
     return Container(
       padding: const EdgeInsets.all(16),
