@@ -39,6 +39,7 @@ class SortingScreenViewModel extends ChangeNotifier {
     selectedOrder = ProductService.defaultSortAscending;
 
     notifyListeners();
+    applySorting();
   }
 
   void applySorting() {

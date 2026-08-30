@@ -72,6 +72,8 @@ class FitlersScreenViewModel extends ChangeNotifier {
   void clearFilters() {
     selectedFilters = Filters();
     notifyListeners();
+
+    applyFilters();
   }
 
   void applyFilters() {
