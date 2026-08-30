@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:strawa/domain/entities/enums/sort_product_enum.dart';
 import 'package:strawa/presentation/home_screen/sorting_screen_viewmodel.dart';
 
 class SortingScreen extends StatefulWidget {
@@ -93,14 +94,65 @@ class _SortingScreenState extends State<SortingScreen> {
     );
   }
 
-    Widget _buildOptionsRadio() {
-        // return
-    }
+Widget _buildOptionsRadio() {
+  return RadioGroup<SortProduct>(
+    groupValue: _viewModel.selectedOption,
+    onChanged: (SortProduct? value) {
+      if (value != null) {
+        _viewModel.updateSortingOption(value);
+      }
+    },
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Sort By',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        ...SortingScreenViewModel.options.entries.map((entry) {
+          return RadioListTile<SortProduct>(
+            title: Text(entry.value),
+            value: entry.key,
+          );
+        }),
+      ],
+    ),
+  );
+}
 
-    Widget _buildOrderRadio() {
-        // return
-    }
-
+Widget _buildOrderRadio() {
+  return RadioGroup<bool>(
+    groupValue: _viewModel.selectedOrder,
+    onChanged: (bool? value) {
+      if (value != null) {
+        _viewModel.updateSortingOrder(value);
+      }
+    },
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Sorting Order',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        ...SortingScreenViewModel.order.entries.map((entry) {
+          return RadioListTile<bool>(
+            title: Text(entry.value),
+            value: entry.key,
+          );
+        }),
+      ],
+    ),
+  );
+}
   Widget _buildApplyButton() {
     return Container(
       padding: const EdgeInsets.all(16),

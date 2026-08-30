@@ -6,7 +6,7 @@ import 'package:strawa/services/product_service.dart';
 class SortingScreenViewModel extends ChangeNotifier {
   final ProductService _productService = locator<ProductService>();
 
-  final Map<SortProduct, String> options = {
+  static const Map<SortProduct, String> options = {
     SortProduct.byPrice: 'Cena',
     SortProduct.byRating: 'Ocena',
     SortProduct.byProductsName: 'Nazwa produktu',
@@ -21,7 +21,7 @@ class SortingScreenViewModel extends ChangeNotifier {
     SortProduct.byWeightToPrice: 'Stosunek masa/cena',
   };
 
-  final Map<bool, String> order = {
+  static const Map<bool, String> order = {
     true : 'Rosnąco',
     false : 'Malejąco'
   };
@@ -50,11 +50,11 @@ class SortingScreenViewModel extends ChangeNotifier {
 
   void updateSortingOption(SortProduct selected) {
     selectedOption = selected;
-    // notifyListeners();
+    notifyListeners();
   }
 
   void updateSortingOrder(bool isAscending) {
     selectedOrder = isAscending;
-    // notifyListeners();
+    notifyListeners();
   }
 }
