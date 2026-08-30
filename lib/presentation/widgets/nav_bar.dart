@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:strawa/locator.dart';
-import 'package:strawa/presentation/home_screen_view.dart';
-import 'package:strawa/presentation/map_screen_view.dart';
-import 'package:strawa/presentation/strawa_day_screen_view.dart';
+import 'package:strawa/presentation/home_screen/home_screen_view.dart';
+import 'package:strawa/presentation/map_screen/map_screen_view.dart';
+import 'package:strawa/presentation/todays_strawa_screen/strawa_day_screen_view.dart';
 import 'package:strawa/presentation/widgets/nav_bar_viewmodel.dart';
 
 class NavBar extends StatelessWidget {

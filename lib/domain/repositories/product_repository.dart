@@ -1,5 +1,6 @@
 import 'package:decimal/decimal.dart';
 import 'package:strawa/domain/dtos/product_list_element_dto.dart';
+import 'package:strawa/domain/entities/enums/sort_product_enum.dart';
 import 'package:strawa/domain/entities/filters.dart';
 import 'package:strawa/domain/entities/product.dart';
 import 'package:strawa/domain/repositories/repository.dart';
@@ -54,7 +55,44 @@ class ProductRepository implements Repository<Product>{
 
   // ============ CRUD END ============
 
+
+  static PostgrestTransformBuilder<List<Map<String, dynamic>>> _applySorting(
+    PostgrestFilterBuilder<List<Map<String, dynamic>>> query,
+    SortProduct sortingType,
+    {bool ascending = true})
+  {
+    switch (sortingType) {
+      case SortProduct.byPrice:
+        return query.order('price', ascending: ascending);
+      case SortProduct.byRating:
+        return query.order('average_rating', ascending: ascending);
+      case SortProduct.byProductsName:
+        return query.order('name', ascending: ascending);
+      case SortProduct.byChainsName:
+        return query.order('name', referencedTable: 'chains', ascending: ascending);
+      case SortProduct.byCalories:
+        return query.order('calories', ascending: ascending);
+      case SortProduct.byCarbs:
+        return query.order('carbohydrates_g', ascending: ascending);
+      case SortProduct.byProtein:
+        return query.order('protein_g', ascending: ascending);
+      case SortProduct.byFat:
+        return query.order('fat_g', ascending: ascending);
+      case SortProduct.byWeight:
+        return query.order('weight_g', ascending: ascending);
+      case SortProduct.byRatingToPrice:
+        return query.order('rating_per_price', ascending: ascending);
+      case SortProduct.byProteinToPrice:
+        return query.order('protein_per_price', ascending: ascending);
+      case SortProduct.byWeightToPrice:
+        return query.order('weight_per_price', ascending: ascending);
+    }
+  }
+  
+
   Future<List<ProductListElementDto>> fetchProductList({
+    SortProduct sortBy = SortProduct.byRating,
+    bool sortAscending = false,
     required int page,
     int pageSize = 20
   }) async {
@@ -97,8 +135,7 @@ class ProductRepository implements Repository<Product>{
       query = query.inFilter('chains.name', filters.chains);
     }
 
-    final data = await query
-      .order('average_rating', ascending: false)
+    final data = await _applySorting(query, sortBy, ascending: sortAscending)
       .range(from, to);
 
 

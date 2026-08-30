@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:strawa/presentation/strawa_day_screen_viewmodel.dart';
+import 'package:strawa/presentation/todays_strawa_screen/strawa_day_screen_viewmodel.dart';
 import 'package:strawa/presentation/widgets/nav_bar.dart';
 
 class StrawaDayScreenView extends StatefulWidget {
