@@ -92,9 +92,8 @@ class NearbyScreenViewModel extends ChangeNotifier {
   }
 
   void selectAllNearbyOffers() {
-    final names = _allNearby.map((r) => r.name).toSet().toList();
+    final names = _filteredRestaurants.map((r) => r.name).toSet().toList();
     _productService.filters = _productService.filters.copyWith(
       chains: names,
     );
-  }
-}
+  }}

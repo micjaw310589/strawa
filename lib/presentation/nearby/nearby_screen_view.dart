@@ -75,7 +75,8 @@ class _NearbyScreenViewState extends State<NearbyScreenView> {
             children: [
               _buildTopControls(),
               Expanded(child: _buildContent()),
-              if (_viewModel.hasSearched) _buildBottomOffersButton(),
+              if (_viewModel.hasSearched && _viewModel.restaurants.isNotEmpty)
+                _buildBottomOffersButton(),
             ],
           ),
           bottomNavigationBar: const NavBar(),
