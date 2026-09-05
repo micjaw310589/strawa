@@ -18,6 +18,9 @@ class NearbyScreenViewModel extends ChangeNotifier {
   List<RestaurantLocation> _filteredRestaurants = [];
 
   bool _isLoading = false;
+  bool _pendingReload = false;
+  int _activeRequestId = 0;
+
   String? _errorMessage;
   String _searchQuery = '';
   double _radiusInMeters = 5000.0; // Domyślnie 5 km
@@ -42,7 +45,11 @@ class NearbyScreenViewModel extends ChangeNotifier {
     if (_radiusInMeters == radius) return;
     _radiusInMeters = radius;
     notifyListeners();
-    if (_currentPosition != null) {
+
+    if (_isLoading) {
+      // Jeśli zapytanie trwa, oznaczamy konieczność ponowienia z nowym promieniem
+      _pendingReload = true;
+    } else {
       loadNearbyRestaurants();
     }
   }
@@ -68,20 +75,41 @@ class NearbyScreenViewModel extends ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
 
+    await _executeFetch();
+  }
+
+  Future<void> _executeFetch() async {
+    final int requestId = ++_activeRequestId;
+
     try {
       _currentPosition = await _locationService.determinePosition();
+      final double queryRadius = _radiusInMeters;
+
       final results = await _osmRestaurantService.getNearbyRestaurants(
         userLat: _currentPosition!.latitude,
         userLng: _currentPosition!.longitude,
-        radiusInMeters: _radiusInMeters,
+        radiusInMeters: queryRadius,
       );
+
+      // Jeśli w międzyczasie zmieniono promień, ignorujemy wynik tego zapytania
+      if (requestId != _activeRequestId || _pendingReload) return;
+
       _allNearby = results;
       filterBySearchText(_searchQuery);
     } catch (e) {
+      if (requestId != _activeRequestId || _pendingReload) return;
       _errorMessage = e.toString().replaceAll('Exception: ', '');
     } finally {
-      _isLoading = false;
-      notifyListeners();
+      if (requestId == _activeRequestId) {
+        if (_pendingReload) {
+          // Natychmiastowe uruchomienie kolejki bez gaszenia wskaźnika ładowania
+          _pendingReload = false;
+          await _executeFetch();
+        } else {
+          _isLoading = false;
+          notifyListeners();
+        }
+      }
     }
   }
 
@@ -96,4 +124,5 @@ class NearbyScreenViewModel extends ChangeNotifier {
     _productService.filters = _productService.filters.copyWith(
       chains: names,
     );
-  }}
+  }
+}
