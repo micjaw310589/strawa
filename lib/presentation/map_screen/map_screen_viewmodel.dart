@@ -7,7 +7,7 @@ import 'package:strawa/services/location_service.dart';
 import 'package:strawa/services/osm_restaurant_service.dart';
 import 'package:strawa/services/product_service.dart';
 
-class MapScreenViewModel extends ChangeNotifier {
+class NearbyScreenViewModel extends ChangeNotifier {
   final _navBarViewModel = locator<NavBarViewModel>();
   final _locationService = locator<LocationService>();
   final _osmRestaurantService = locator<OsmRestaurantService>();
@@ -20,10 +20,10 @@ class MapScreenViewModel extends ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   String _searchQuery = '';
-  double _radiusInMeters = 2000.0; // Domyślnie 2 km
+  double _radiusInMeters = 5000.0; // Domyślnie 5 km
 
-  MapScreenViewModel() {
-    _navBarViewModel.setActiveItem(NavBarItem.mapa);
+  NearbyScreenViewModel() {
+    _navBarViewModel.setActiveItem(NavBarItem.wOkolicy);
   }
 
   // Gettery

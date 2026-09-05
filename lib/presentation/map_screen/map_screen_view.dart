@@ -4,21 +4,21 @@ import 'package:strawa/presentation/map_screen/map_screen_viewmodel.dart';
 import 'package:strawa/presentation/widgets/nav_bar.dart';
 import 'package:strawa/presentation/widgets/restaurant_tile_view.dart';
 
-class MapScreenView extends StatefulWidget {
-  const MapScreenView({super.key});
+class NearbyScreenView extends StatefulWidget {
+  const NearbyScreenView({super.key});
 
   @override
-  State<MapScreenView> createState() => _MapScreenViewState();
+  State<NearbyScreenView> createState() => _NearbyScreenViewState();
 }
 
-class _MapScreenViewState extends State<MapScreenView> {
-  late final MapScreenViewModel _viewModel;
+class _NearbyScreenViewState extends State<NearbyScreenView> {
+  late final NearbyScreenViewModel _viewModel;
   final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _viewModel = MapScreenViewModel();
+    _viewModel = NearbyScreenViewModel();
     // Automatyczny monit o lokalizację i pobranie restauracji przy pierwszym wejściu
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _viewModel.loadNearbyRestaurants();

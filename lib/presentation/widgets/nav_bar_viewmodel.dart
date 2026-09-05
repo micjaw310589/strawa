@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum NavBarItem { mapa, home, strawaDnia }
+enum NavBarItem { wOkolicy, home, strawaDnia }
 
 /// ViewModel paska nawigacji.
 ///

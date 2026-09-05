@@ -34,9 +34,9 @@ class NavBar extends StatelessWidget {
                 _buildItem(
                   context: context,
                   viewModel: viewModel,
-                  item: NavBarItem.mapa,
+                  item: NavBarItem.wOkolicy,
                   icon: Icons.map,
-                  label: 'Mapa',
+                  label: 'W Okolicy',
                 ),
                 _buildItem(
                   context: context,
@@ -69,8 +69,8 @@ class NavBar extends StatelessWidget {
 
   Widget _screenFor(NavBarItem item) {
     switch (item) {
-      case NavBarItem.mapa:
-        return const MapScreenView();
+      case NavBarItem.wOkolicy:
+        return const NearbyScreenView();
       case NavBarItem.home:
         return const HomeScreenView();
       case NavBarItem.strawaDnia:
