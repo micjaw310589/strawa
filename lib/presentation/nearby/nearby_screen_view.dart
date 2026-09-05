@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:strawa/locator.dart';
 import 'package:strawa/presentation/home_screen/home_screen_view.dart';
-import 'package:strawa/presentation/map_screen/map_screen_viewmodel.dart';
+import 'package:strawa/presentation/nearby/nearby_screen_viewmodel.dart';
 import 'package:strawa/presentation/widgets/nav_bar.dart';
 import 'package:strawa/presentation/widgets/restaurant_tile_view.dart';
 
@@ -13,16 +14,26 @@ class NearbyScreenView extends StatefulWidget {
 
 class _NearbyScreenViewState extends State<NearbyScreenView> {
   late final NearbyScreenViewModel _viewModel;
-  final TextEditingController _searchController = TextEditingController();
+  late final TextEditingController _searchController;
 
   @override
   void initState() {
     super.initState();
-    _viewModel = NearbyScreenViewModel();
-    // Automatyczny monit o lokalizację i pobranie restauracji przy pierwszym wejściu
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _viewModel.loadNearbyRestaurants();
-    });
+    _viewModel = locator<NearbyScreenViewModel>();
+    _viewModel.activate();
+
+    // Przywrócenie wpisanego wcześniej tekstu wyszukiwania
+    _searchController = TextEditingController(text: _viewModel.searchQuery);
+    _searchController.selection = TextSelection.fromPosition(
+      TextPosition(offset: _searchController.text.length),
+    );
+
+    // Automatyczne pobieranie tylko przy pierwszym wejściu (gdy brak zapisanych danych)
+    if (!_viewModel.hasSearched && !_viewModel.isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _viewModel.loadNearbyRestaurants();
+      });
+    }
   }
 
   @override
@@ -79,7 +90,6 @@ class _NearbyScreenViewState extends State<NearbyScreenView> {
       padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
       child: Column(
         children: [
-          // Search bar
           TextField(
             controller: _searchController,
             onChanged: _viewModel.filterBySearchText,
@@ -105,7 +115,6 @@ class _NearbyScreenViewState extends State<NearbyScreenView> {
             ),
           ),
           const SizedBox(height: 8),
-          // Promień wyszukiwania (Dropdown / Slider)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -123,6 +132,7 @@ class _NearbyScreenViewState extends State<NearbyScreenView> {
                   DropdownMenuItem(value: 5000.0, child: Text('5 km')),
                   DropdownMenuItem(value: 10000.0, child: Text('10 km')),
                   DropdownMenuItem(value: 15000.0, child: Text('15 km')),
+                  DropdownMenuItem(value: 20000.0, child: Text('20 km')),
                 ],
                 onChanged: (value) {
                   if (value != null) _viewModel.setRadius(value);
@@ -136,7 +146,8 @@ class _NearbyScreenViewState extends State<NearbyScreenView> {
   }
 
   Widget _buildContent() {
-    if (_viewModel.isLoading) {
+    // Pełnoekranowy loader tylko przy pierwszym pobieraniu
+    if (_viewModel.isLoading && !_viewModel.hasSearched) {
       return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -149,63 +160,85 @@ class _NearbyScreenViewState extends State<NearbyScreenView> {
       );
     }
 
-    if (_viewModel.errorMessage != null) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.location_off, size: 56, color: Colors.orange),
-              const SizedBox(height: 12),
-              Text(
-                _viewModel.errorMessage!,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 14),
+    if (_viewModel.errorMessage != null && _viewModel.restaurants.isEmpty) {
+      return RefreshIndicator(
+        onRefresh: _viewModel.loadNearbyRestaurants,
+        child: LayoutBuilder(
+          builder: (context, constraints) => SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.location_off, size: 56, color: Colors.orange),
+                      const SizedBox(height: 12),
+                      Text(
+                        _viewModel.errorMessage!,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton.icon(
+                        onPressed: _viewModel.loadNearbyRestaurants,
+                        icon: const Icon(Icons.refresh),
+                        label: const Text('Spróbuj ponownie'),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              const SizedBox(height: 16),
-              ElevatedButton.icon(
-                onPressed: _viewModel.loadNearbyRestaurants,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Spróbuj ponownie'),
-              ),
-            ],
+            ),
           ),
         ),
       );
     }
 
     if (_viewModel.restaurants.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.store_mall_directory_outlined, size: 56, color: Colors.grey),
-            const SizedBox(height: 12),
-            const Text('Nie znaleziono żadnych lokali w tym promieniu.'),
-            // const SizedBox(height: 8),
-            // TextButton(
-            //   onPressed: () => _viewModel.setRadius(5000.0),
-            //   child: const Text('Zwiększ promień wyszukiwania'),
-            // ),
-          ],
+      return RefreshIndicator(
+        onRefresh: _viewModel.loadNearbyRestaurants,
+        child: LayoutBuilder(
+          builder: (context, constraints) => SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.store_mall_directory_outlined, size: 56, color: Colors.grey),
+                    SizedBox(height: 12),
+                    Text('Nie znaleziono żadnych lokali w tym promieniu.'),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
       );
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.only(top: 6, bottom: 12),
-      itemCount: _viewModel.restaurants.length,
-      itemBuilder: (context, index) {
-        final restaurant = _viewModel.restaurants[index];
-        return RestaurantTileView(
-          restaurant: restaurant,
-          onSearchOffers: () {
-            _viewModel.selectRestaurantOffers(restaurant.name);
-            _navigateToHome();
-          },
-        );
-      },
+    // Lista wyników z obsługą gestu Pull-to-Refresh
+    return RefreshIndicator(
+      onRefresh: _viewModel.loadNearbyRestaurants,
+      child: ListView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.only(top: 6, bottom: 12),
+        itemCount: _viewModel.restaurants.length,
+        itemBuilder: (context, index) {
+          final restaurant = _viewModel.restaurants[index];
+          return RestaurantTileView(
+            restaurant: restaurant,
+            onSearchOffers: () {
+              _viewModel.selectRestaurantOffers(restaurant.name);
+              _navigateToHome();
+            },
+          );
+        },
+      ),
     );
   }
 

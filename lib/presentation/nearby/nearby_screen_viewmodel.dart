@@ -23,6 +23,10 @@ class NearbyScreenViewModel extends ChangeNotifier {
   double _radiusInMeters = 5000.0; // Domyślnie 5 km
 
   NearbyScreenViewModel() {
+    activate();
+  }
+
+  void activate() {
     _navBarViewModel.setActiveItem(NavBarItem.wOkolicy);
   }
 
@@ -32,6 +36,7 @@ class NearbyScreenViewModel extends ChangeNotifier {
   double get radiusInMeters => _radiusInMeters;
   List<RestaurantLocation> get restaurants => _filteredRestaurants;
   bool get hasSearched => _allNearby.isNotEmpty;
+  String get searchQuery => _searchQuery;
 
   void setRadius(double radius) {
     if (_radiusInMeters == radius) return;
@@ -43,13 +48,14 @@ class NearbyScreenViewModel extends ChangeNotifier {
   }
 
   void filterBySearchText(String query) {
-    _searchQuery = query.toLowerCase();
-    if (_searchQuery.isEmpty) {
+    _searchQuery = query;
+    final lower = query.trim().toLowerCase();
+    if (lower.isEmpty) {
       _filteredRestaurants = List.from(_allNearby);
     } else {
       _filteredRestaurants = _allNearby.where((r) {
-        return r.name.toLowerCase().contains(_searchQuery) ||
-               r.formattedAddress.toLowerCase().contains(_searchQuery);
+        return r.name.toLowerCase().contains(lower) ||
+            r.formattedAddress.toLowerCase().contains(lower);
       }).toList();
     }
     notifyListeners();
@@ -64,11 +70,12 @@ class NearbyScreenViewModel extends ChangeNotifier {
 
     try {
       _currentPosition = await _locationService.determinePosition();
-      _allNearby = await _osmRestaurantService.getNearbyRestaurants(
+      final results = await _osmRestaurantService.getNearbyRestaurants(
         userLat: _currentPosition!.latitude,
         userLng: _currentPosition!.longitude,
         radiusInMeters: _radiusInMeters,
       );
+      _allNearby = results;
       filterBySearchText(_searchQuery);
     } catch (e) {
       _errorMessage = e.toString().replaceAll('Exception: ', '');
@@ -78,14 +85,12 @@ class NearbyScreenViewModel extends ChangeNotifier {
     }
   }
 
-  /// Ustawia filtr w HomeScreen na wybraną restaurację i przygotowuje przejście
   void selectRestaurantOffers(String restaurantName) {
     _productService.filters = _productService.filters.copyWith(
       chains: [restaurantName],
     );
   }
 
-  /// Ustawia filtr w HomeScreen na wszystkie znalezione w okolicy restauracje
   void selectAllNearbyOffers() {
     final names = _allNearby.map((r) => r.name).toSet().toList();
     _productService.filters = _productService.filters.copyWith(

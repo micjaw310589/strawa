@@ -3,6 +3,7 @@ import 'package:strawa/domain/repositories/product_repository.dart';
 import 'package:strawa/domain/repositories/tag_repository.dart';
 import 'package:strawa/domain/repositories/chain_repository.dart';
 import 'package:strawa/domain/repositories/osm_restaurant_repository.dart';
+import 'package:strawa/presentation/nearby/nearby_screen_viewmodel.dart';
 import 'package:strawa/services/product_service.dart';
 import 'package:strawa/services/tag_service.dart';
 import 'package:strawa/services/chain_service.dart';
@@ -15,6 +16,7 @@ final locator = GetIt.instance;
 void setupLocator() {
   // Presentation
   locator.registerLazySingleton<NavBarViewModel>(() => NavBarViewModel());
+  locator.registerLazySingleton<NearbyScreenViewModel>(() => NearbyScreenViewModel());
 
   // Repositories
   locator.registerLazySingleton<ProductRepository>(() => ProductRepository());
