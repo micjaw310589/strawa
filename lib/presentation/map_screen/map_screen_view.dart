@@ -118,11 +118,11 @@ class _MapScreenViewState extends State<MapScreenView> {
                 isDense: true,
                 underline: const SizedBox(),
                 items: const [
-                  DropdownMenuItem(value: 500.0, child: Text('500 m')),
                   DropdownMenuItem(value: 1000.0, child: Text('1 km')),
                   DropdownMenuItem(value: 2000.0, child: Text('2 km')),
                   DropdownMenuItem(value: 5000.0, child: Text('5 km')),
                   DropdownMenuItem(value: 10000.0, child: Text('10 km')),
+                  DropdownMenuItem(value: 15000.0, child: Text('15 km')),
                 ],
                 onChanged: (value) {
                   if (value != null) _viewModel.setRadius(value);
@@ -183,11 +183,11 @@ class _MapScreenViewState extends State<MapScreenView> {
             const Icon(Icons.store_mall_directory_outlined, size: 56, color: Colors.grey),
             const SizedBox(height: 12),
             const Text('Nie znaleziono żadnych lokali w tym promieniu.'),
-            const SizedBox(height: 8),
-            TextButton(
-              onPressed: () => _viewModel.setRadius(5000.0),
-              child: const Text('Zwiększ promień do 5 km'),
-            ),
+            // const SizedBox(height: 8),
+            // TextButton(
+            //   onPressed: () => _viewModel.setRadius(5000.0),
+            //   child: const Text('Zwiększ promień wyszukiwania'),
+            // ),
           ],
         ),
       );

@@ -77,10 +77,26 @@ class RestaurantLocation {
     );
   }
 
-  factory RestaurantLocation.fromOsmJson(Map<String, dynamic> json) {
+factory RestaurantLocation.fromOsmJson(
+    Map<String, dynamic> json, {
+    List<String> chainNames = const [],
+  }) {
     final tags = (json['tags'] as Map<String, dynamic>?) ?? {};
     
-    // Dla węzłów (node) koordynaty są bezpośrednio, dla obszarów (way) w polu "center"
+    // Jeśli obiekt nie ma "name", pobieramy wartość z "brand"
+    final rawName = (tags['name'] as String?)?.trim() ?? 
+                    (tags['brand'] as String?)?.trim() ?? 
+                    'Restauracja';
+
+    String canonicalName = rawName;
+    for (final chain in chainNames) {
+      final brandTag = (tags['brand'] as String?)?.toLowerCase() ?? '';
+      if (rawName.toLowerCase().contains(chain.toLowerCase()) || brandTag.contains(chain.toLowerCase())) {
+        canonicalName = chain;
+        break;
+      }
+    }
+
     double lat = 0.0;
     double lon = 0.0;
     if (json.containsKey('lat') && json.containsKey('lon')) {
@@ -93,7 +109,7 @@ class RestaurantLocation {
 
     return RestaurantLocation(
       id: json['id'].toString(),
-      name: tags['name'] as String? ?? 'Restauracja',
+      name: canonicalName,
       latitude: lat,
       longitude: lon,
       street: tags['addr:street'] as String?,

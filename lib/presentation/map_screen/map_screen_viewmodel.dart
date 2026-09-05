@@ -56,6 +56,8 @@ class MapScreenViewModel extends ChangeNotifier {
   }
 
   Future<void> loadNearbyRestaurants() async {
+    if (_isLoading) return;
+
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
