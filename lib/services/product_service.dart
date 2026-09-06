@@ -15,38 +15,61 @@ class ProductService {
   Filters get filters => _productRepository.filters;
 
   set filters(Filters f) {
-    if (f.minRating < 0.0){
+    if (f.minRating < 0.0) {
       throw Exception("Rating can't be lower than 0");
     }
-    if (f.minRating > 5.0){
+    if (f.minRating > 5.0) {
       throw Exception("Rating can't be higher than 5.0");
     }
     if (f.minPrice < 0.0 || f.maxPrice < 0.0) {
       throw Exception("Price can't be lower than 0");
     }
-    if (f.maxPrice < f.minPrice){
+    if (f.maxPrice < f.minPrice) {
       throw Exception("Max price can't be lower than min price");
     }
 
     _productRepository.filters = f;
   }
 
-
   Future<List<ProductListElementDto>> getProductsForMainList({
     required int page,
     int pageSize = 20,
   }) async {
-    try{
+    try {
       final productList = await _productRepository.fetchProductList(
         sortBy: sortBy,
         sortAscending: sortAscending,
         page: page,
-        pageSize: pageSize
+        pageSize: pageSize,
       );
       return productList;
+    } catch (e) {
+      throw Exception(
+        "Service failed to retrieve product list from database: ${e.toString()}",
+      );
     }
-    catch(e) {
-      throw Exception("Service failed to retrieve product list from database: ${e.toString()}");
+  }
+
+  Future<ProductListElementDto> getRandomProduct() async {
+    final ProductListElementDto randomProduct;
+    try {
+      randomProduct = await _productRepository.fetchRandomProduct();
+    } catch (e) {
+      throw Exception(
+        "Service failed to retrieve random product from database: ${e.toString()}",
+      );
     }
+
+    if (randomProduct.id.isEmpty) {
+      throw Exception("Retrieved random product has empty id");
+    }
+    if (randomProduct.name.isEmpty) {
+      throw Exception("Retrieved random product has empty name");
+    }
+    if (randomProduct.chainName.isEmpty) {
+      throw Exception("Retrieved random product has empty chain name");
+    }
+
+    return randomProduct;
   }
 }

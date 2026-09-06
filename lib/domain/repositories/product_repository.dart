@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:decimal/decimal.dart';
 import 'package:strawa/domain/dtos/product_list_element_dto.dart';
 import 'package:strawa/domain/entities/enums/sort_product_enum.dart';
@@ -6,7 +8,7 @@ import 'package:strawa/domain/entities/product.dart';
 import 'package:strawa/domain/repositories/repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class ProductRepository implements Repository<Product>{
+class ProductRepository implements Repository<Product> {
   final SupabaseClient _client = Supabase.instance.client;
 
   Filters filters = Filters();
@@ -15,25 +17,25 @@ class ProductRepository implements Repository<Product>{
 
   @override
   Future<List<Product>> fetchAll() async {
-    final data = await _client.from('products').select()
-      .eq('is_deleted', false)
-      .eq('is_active', true)
-      .order('created_at');
-    return (data as List)
-            .map((json) => Product.fromJson(json))
-            .toList();
+    final data = await _client
+        .from('products')
+        .select()
+        .eq('is_deleted', false)
+        .eq('is_active', true)
+        .order('created_at');
+    return (data as List).map((json) => Product.fromJson(json)).toList();
   }
 
   @override
   Future<Product> fetchById(String id) async {
-    final data = await _client.from('products').select()
-      .eq('is_deleted', false)
-      .eq('is_active', true)
-      .eq('id', id)
-      .limit(1);
-    return (data as List)
-            .map((json) => Product.fromJson(json))
-            .first;
+    final data = await _client
+        .from('products')
+        .select()
+        .eq('is_deleted', false)
+        .eq('is_active', true)
+        .eq('id', id)
+        .limit(1);
+    return (data as List).map((json) => Product.fromJson(json)).first;
   }
 
   @override
@@ -43,24 +45,25 @@ class ProductRepository implements Repository<Product>{
 
   @override
   Future<void> update(Product obj) async {
-    await _client.from('products').update(obj.toJson())
-      .eq('is_deleted', false)
-      .eq('id', obj.id);
+    await _client
+        .from('products')
+        .update(obj.toJson())
+        .eq('is_deleted', false)
+        .eq('id', obj.id);
   }
 
   @override
   Future<void> delete(String id) async {
-    await _client.from('products').update({'is_deleted' : true}).eq('id', id);
+    await _client.from('products').update({'is_deleted': true}).eq('id', id);
   }
 
   // ============ CRUD END ============
 
-
   static PostgrestTransformBuilder<List<Map<String, dynamic>>> _applySorting(
     PostgrestFilterBuilder<List<Map<String, dynamic>>> query,
-    SortProduct sortingType,
-    {bool ascending = true})
-  {
+    SortProduct sortingType, {
+    bool ascending = true,
+  }) {
     switch (sortingType) {
       case SortProduct.byPrice:
         return query.order('price', ascending: ascending);
@@ -69,7 +72,11 @@ class ProductRepository implements Repository<Product>{
       case SortProduct.byProductsName:
         return query.order('name', ascending: ascending);
       case SortProduct.byChainsName:
-        return query.order('name', referencedTable: 'chains', ascending: ascending);
+        return query.order(
+          'name',
+          referencedTable: 'chains',
+          ascending: ascending,
+        );
       case SortProduct.byCalories:
         return query.order('calories', ascending: ascending);
       case SortProduct.byCarbs:
@@ -88,32 +95,32 @@ class ProductRepository implements Repository<Product>{
         return query.order('weight_per_price', ascending: ascending);
     }
   }
-  
 
   Future<List<ProductListElementDto>> fetchProductList({
     SortProduct sortBy = SortProduct.byRating,
     bool sortAscending = false,
     required int page,
-    int pageSize = 20
+    int pageSize = 20,
   }) async {
-    if (page < 0){
+    if (page < 0) {
       throw Exception("Page cannot be lower than 0");
     }
-    if (pageSize < 0){
+    if (pageSize < 0) {
       throw Exception("Page size cannot be lower than 0");
     }
-    if (pageSize > 100){
+    if (pageSize > 100) {
       throw Exception("Page size limit set to 100");
     }
 
     final minPrice = Decimal.parse(filters.minPrice.toString());
     final maxPrice = Decimal.parse(filters.maxPrice.toString());
 
-    final from = (page-1) * pageSize;
+    final from = (page - 1) * pageSize;
     final to = from + pageSize - 1;
 
-    var query = _client.from('products')
-      .select('''
+    var query = _client
+        .from('products')
+        .select('''
         id,
         name,
         image_url,
@@ -122,24 +129,67 @@ class ProductRepository implements Repository<Product>{
         tags!inner( name ),
         average_rating
       ''')
-      .eq('is_deleted', false)
-      .eq('is_active', true)
-      .gte('price', minPrice.toDouble())
-      .lte('price', maxPrice.toDouble())
-      .gte('average_rating', filters.minRating);
+        .eq('is_deleted', false)
+        .eq('is_active', true)
+        .gte('price', minPrice.toDouble())
+        .lte('price', maxPrice.toDouble())
+        .gte('average_rating', filters.minRating);
 
-    if (filters.tags.isNotEmpty){
+    if (filters.tags.isNotEmpty) {
       query = query.inFilter('tags.name', filters.tags);
     }
-    if (filters.chains.isNotEmpty){
+    if (filters.chains.isNotEmpty) {
       query = query.inFilter('chains.name', filters.chains);
     }
 
-    final data = await _applySorting(query, sortBy, ascending: sortAscending)
-      .range(from, to);
+    final data = await _applySorting(
+      query,
+      sortBy,
+      ascending: sortAscending,
+    ).range(from, to);
 
-
-    return (data as List).map((json) => ProductListElementDto.fromJson(json)).toList();
+    return (data as List)
+        .map((json) => ProductListElementDto.fromJson(json))
+        .toList();
   }
 
+  // ============ Random product ============
+
+  Future<ProductListElementDto> fetchRandomProduct() async {
+    const String selectColumns = '''
+        id,
+        name,
+        image_url,
+        price,
+        chains!inner( name ),
+        tags( name ),
+        average_rating
+      ''';
+
+    final int totalCount = await _client
+        .from('products')
+        .count()
+        .eq('is_deleted', false)
+        .eq('is_active', true);
+
+    if (totalCount == 0) {
+      throw Exception("No products available in database");
+    }
+
+    final int randomIndex = Random.secure().nextInt(totalCount);
+
+    final List<dynamic> data = await _client
+        .from('products')
+        .select(selectColumns)
+        .eq('is_deleted', false)
+        .eq('is_active', true)
+        .order('id')
+        .range(randomIndex, randomIndex);
+
+    if (data.isEmpty) {
+      throw Exception("No products available in database");
+    }
+
+    return ProductListElementDto.fromJson(data.first as Map<String, dynamic>);
+  }
 }

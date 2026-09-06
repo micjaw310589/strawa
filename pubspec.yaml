@@ -17,6 +17,7 @@ dependencies:
   supabase_flutter: ^2.0.0
   decimal: ^3.2.4
   get_it: ^9.2.1
+  sensors_plus: ^7.1.0
 
 dev_dependencies:
   flutter_test:
