@@ -61,7 +61,7 @@ class _HomeScreenViewState extends State<HomeScreenView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Strawa',
+          'Na co dzisiaj masz ochotę?',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -75,7 +75,6 @@ class _HomeScreenViewState extends State<HomeScreenView> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _viewModel.refresh,
-            tooltip: 'Odśwież listę produktów',
           ),
         ],
       ),
