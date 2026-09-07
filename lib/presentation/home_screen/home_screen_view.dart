@@ -84,8 +84,8 @@ class _HomeScreenViewState extends State<HomeScreenView> {
           return Stack(
             children: [
               RefreshIndicator(
-                color: Colors.deepOrange,       // Kolor obracającego się kółka
-                backgroundColor: Colors.white, // Tło kółka (opcjonalne)
+                color: Colors.deepOrange,
+                backgroundColor: Colors.white,
                 onRefresh: _viewModel.refresh,
                 child: ListView.builder(
                   controller: _scrollController,
