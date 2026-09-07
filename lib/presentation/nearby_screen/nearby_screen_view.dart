@@ -168,6 +168,8 @@ class _NearbyScreenViewState extends State<NearbyScreenView> {
 
     if (_viewModel.errorMessage != null && _viewModel.restaurants.isEmpty) {
       return RefreshIndicator(
+        color: Colors.deepOrange,
+        backgroundColor: Colors.white,
         onRefresh: _viewModel.loadNearbyRestaurants,
         child: LayoutBuilder(
           builder: (context, constraints) => SingleChildScrollView(
@@ -205,6 +207,8 @@ class _NearbyScreenViewState extends State<NearbyScreenView> {
 
     if (_viewModel.restaurants.isEmpty) {
       return RefreshIndicator(
+        color: Colors.deepOrange,
+        backgroundColor: Colors.white,
         onRefresh: _viewModel.loadNearbyRestaurants,
         child: LayoutBuilder(
           builder: (context, constraints) => SingleChildScrollView(
@@ -228,6 +232,8 @@ class _NearbyScreenViewState extends State<NearbyScreenView> {
     }
 
     return RefreshIndicator(
+      color: Colors.deepOrange,
+      backgroundColor: Colors.white,
       onRefresh: _viewModel.loadNearbyRestaurants,
       child: ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
