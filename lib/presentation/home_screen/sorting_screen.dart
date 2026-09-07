@@ -81,7 +81,7 @@ class _SortingScreenState extends State<SortingScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Text(
-            'Sorting',
+            'Sortowanie',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -108,7 +108,7 @@ class _SortingScreenState extends State<SortingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Sort By',
+            'Sortuj wg',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -138,7 +138,7 @@ class _SortingScreenState extends State<SortingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Sorting Order',
+            'Kolejność',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -175,7 +175,7 @@ class _SortingScreenState extends State<SortingScreen> {
               ),
               onPressed: _viewModel.resetToDefault,
               child: const Text(
-                'Restore Default',
+                'Przywróć domyślne',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.black87,
@@ -196,7 +196,7 @@ class _SortingScreenState extends State<SortingScreen> {
               ),
               onPressed: _viewModel.applySorting,
               child: const Text(
-                'Apply Sorting',
+                'Zastosuj',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.white,
