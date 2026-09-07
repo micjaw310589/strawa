@@ -92,7 +92,7 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Text(
-            'Filters',
+            'Filtry',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -112,7 +112,7 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Tags',
+          'Tagi',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -122,7 +122,7 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
         if (_viewModel.isLoadingTags)
           const Center(child: CircularProgressIndicator())
         else if (_viewModel.tags.isEmpty)
-          const Text('No tags available')
+          const Text('Tagi są niedostępne')
         else
           Wrap(
             spacing: 8,
@@ -158,7 +158,7 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Restaurant Chains',
+          'Restauracje',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -168,7 +168,7 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
         if (_viewModel.isLoadingChains)
           const Center(child: CircularProgressIndicator())
         else if (_viewModel.chains.isEmpty)
-          const Text('No tags available')
+          const Text('Restauracje są niedostępne')
         else
           Wrap(
             spacing: 8,
@@ -204,7 +204,7 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Price Range',
+          'Cena',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -217,8 +217,8 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
           max: 100,
           divisions: 20,
           labels: RangeLabels(
-            '\$${_viewModel.selectedFilters.minPrice.round()}',
-            '\$${_viewModel.selectedFilters.maxPrice.round()}',
+            '${_viewModel.selectedFilters.minPrice.round()} zł',
+            '${_viewModel.selectedFilters.maxPrice.round()} zł',
           ),
           onChanged: (values) {
             _viewModel.updatePriceRange(values.start, values.end);
@@ -227,8 +227,8 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('\$${_viewModel.selectedFilters.minPrice.round()}'),
-            Text('\$${_viewModel.selectedFilters.maxPrice.round()}'),
+            Text('${_viewModel.selectedFilters.minPrice.round()} zł'),
+            Text('${_viewModel.selectedFilters.maxPrice.round()} zł'),
           ],
         ),
       ],
@@ -240,7 +240,7 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Minimum Rating',
+          'Oceny',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -293,7 +293,7 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
               ),
               onPressed: _viewModel.clearFilters,
               child: const Text(
-                'Clear Filters',
+                'Wyczyść filtry',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.black87,
@@ -314,7 +314,7 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
               ),
               onPressed: _viewModel.applyFilters,
               child: const Text(
-                'Apply Filters',
+                'Zastosuj filtry',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.white,
