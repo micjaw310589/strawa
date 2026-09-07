@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:strawa/locator.dart';
 import 'package:strawa/presentation/home_screen/home_screen_view.dart';
-import 'package:strawa/presentation/map_screen/map_screen_view.dart';
+import 'package:strawa/presentation/nearby/nearby_screen_view.dart';
 import 'package:strawa/presentation/todays_strawa_screen/strawa_day_screen_view.dart';
 import 'package:strawa/presentation/widgets/nav_bar_viewmodel.dart';
 
@@ -34,9 +34,9 @@ class NavBar extends StatelessWidget {
                 _buildItem(
                   context: context,
                   viewModel: viewModel,
-                  item: NavBarItem.mapa,
+                  item: NavBarItem.wOkolicy,
                   icon: Icons.map,
-                  label: 'Mapa',
+                  label: 'W Okolicy',
                 ),
                 _buildItem(
                   context: context,
@@ -69,8 +69,8 @@ class NavBar extends StatelessWidget {
 
   Widget _screenFor(NavBarItem item) {
     switch (item) {
-      case NavBarItem.mapa:
-        return const MapScreenView();
+      case NavBarItem.wOkolicy:
+        return const NearbyScreenView();
       case NavBarItem.home:
         return const HomeScreenView();
       case NavBarItem.strawaDnia:
