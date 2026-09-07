@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:strawa/locator.dart';
 import 'package:strawa/presentation/home_screen/home_screen_view.dart';
-import 'package:strawa/presentation/nearby/nearby_screen_view.dart';
+import 'package:strawa/presentation/nearby_screen/nearby_screen_view.dart';
 import 'package:strawa/presentation/todays_strawa_screen/strawa_day_screen_view.dart';
 import 'package:strawa/presentation/widgets/nav_bar_viewmodel.dart';
 

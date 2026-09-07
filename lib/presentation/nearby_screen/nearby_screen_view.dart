@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:strawa/locator.dart';
 import 'package:strawa/presentation/home_screen/home_screen_view.dart';
-import 'package:strawa/presentation/nearby/nearby_screen_viewmodel.dart';
+import 'package:strawa/presentation/nearby_screen/nearby_screen_viewmodel.dart';
 import 'package:strawa/presentation/widgets/nav_bar.dart';
 import 'package:strawa/presentation/widgets/restaurant_tile_view.dart';
 
@@ -22,13 +22,11 @@ class _NearbyScreenViewState extends State<NearbyScreenView> {
     _viewModel = locator<NearbyScreenViewModel>();
     _viewModel.activate();
 
-    // Przywrócenie wpisanego wcześniej tekstu wyszukiwania
     _searchController = TextEditingController(text: _viewModel.searchQuery);
     _searchController.selection = TextSelection.fromPosition(
       TextPosition(offset: _searchController.text.length),
     );
 
-    // Automatyczne pobieranie tylko przy pierwszym wejściu (gdy brak zapisanych danych)
     if (!_viewModel.hasSearched && !_viewModel.isLoading) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _viewModel.loadNearbyRestaurants();
@@ -74,6 +72,9 @@ class _NearbyScreenViewState extends State<NearbyScreenView> {
           body: Column(
             children: [
               _buildTopControls(),
+              // Jedyny indykator ładowania: pasek postępu pod kontrolkami
+              if (_viewModel.isLoading)
+                const LinearProgressIndicator(minHeight: 2.5),
               Expanded(child: _buildContent()),
               if (_viewModel.hasSearched && _viewModel.restaurants.isNotEmpty)
                 _buildBottomOffersButton(),
@@ -133,6 +134,7 @@ class _NearbyScreenViewState extends State<NearbyScreenView> {
                   DropdownMenuItem(value: 5000.0, child: Text('5 km')),
                   DropdownMenuItem(value: 10000.0, child: Text('10 km')),
                   DropdownMenuItem(value: 15000.0, child: Text('15 km')),
+                  DropdownMenuItem(value: 20000.0, child: Text('20 km')),
                 ],
                 onChanged: (value) {
                   if (value != null) _viewModel.setRadius(value);
@@ -146,7 +148,7 @@ class _NearbyScreenViewState extends State<NearbyScreenView> {
   }
 
   Widget _buildContent() {
-    // Pełnoekranowy loader tylko przy pierwszym pobieraniu
+    // Pełnoekranowy loader tylko przy pierwszym pobieraniu, gdy lista jest całkowicie pusta
     if (_viewModel.isLoading && !_viewModel.hasSearched) {
       return const Center(
         child: Column(
@@ -221,7 +223,6 @@ class _NearbyScreenViewState extends State<NearbyScreenView> {
       );
     }
 
-    // Lista wyników z obsługą gestu Pull-to-Refresh
     return RefreshIndicator(
       onRefresh: _viewModel.loadNearbyRestaurants,
       child: ListView.builder(
