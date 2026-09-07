@@ -37,8 +37,8 @@ class RestaurantTileView extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 22,
-                  backgroundColor: Colors.blue.shade50,
-                  child: const Icon(Icons.restaurant, color: Colors.blue),
+                  backgroundColor: Colors.orange.shade50,
+                  child: const Icon(Icons.restaurant, color: Colors.deepOrangeAccent),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -64,15 +64,15 @@ class RestaurantTileView extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.blue.shade100,
+                    color: Colors.amber.shade100,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     restaurant.formattedDistance,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue,
+                      color: Colors.amber.shade900,
                     ),
                   ),
                 ),
@@ -87,6 +87,7 @@ class RestaurantTileView extends StatelessWidget {
                     icon: const Icon(Icons.navigation, size: 16),
                     label: const Text('Nawiguj'),
                     style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.black87,
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -101,7 +102,7 @@ class RestaurantTileView extends StatelessWidget {
                     icon: const Icon(Icons.search, size: 16),
                     label: const Text('Oferta'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Colors.deepOrange,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       shape: RoundedRectangleBorder(

@@ -105,15 +105,16 @@ class ProductExtendedTile extends StatelessWidget {
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.blue[50],
+                                color: Colors.amber[50],
                                 borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: Colors.blue[200]!),
+                                border: Border.all(color: Colors.amber[200]!),
                               ),
                               child: Text(
                                 tag,
                                 style: TextStyle(
                                   fontSize: 13,
-                                  color: Colors.blue[800],
+                                  color: Colors.deepOrange[800],
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ),
@@ -150,7 +151,7 @@ class ProductExtendedTile extends StatelessWidget {
                 ),
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) return child;
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator(color: Colors.deepOrange));
                 },
               )
             : const Icon(

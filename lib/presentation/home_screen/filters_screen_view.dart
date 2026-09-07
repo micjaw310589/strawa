@@ -120,7 +120,7 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
         ),
         const SizedBox(height: 8),
         if (_viewModel.isLoadingTags)
-          const Center(child: CircularProgressIndicator())
+          const Center(child: CircularProgressIndicator(color: Colors.deepOrange))
         else if (_viewModel.tags.isEmpty)
           const Text('Tagi są niedostępne')
         else
@@ -142,7 +142,7 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
                   });
                 },
                 backgroundColor: Colors.grey[200],
-                selectedColor: Colors.blue[200],
+                selectedColor: Colors.amber[200],
                 labelStyle: TextStyle(
                   color: isSelected ? Colors.white : Colors.black,
                 ),
@@ -166,7 +166,7 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
         ),
         const SizedBox(height: 8),
         if (_viewModel.isLoadingChains)
-          const Center(child: CircularProgressIndicator())
+          const Center(child: CircularProgressIndicator(color: Colors.deepOrange))
         else if (_viewModel.chains.isEmpty)
           const Text('Restauracje są niedostępne')
         else
@@ -212,6 +212,8 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
         ),
         const SizedBox(height: 8),
         RangeSlider(
+          activeColor: Colors.deepOrange,
+          inactiveColor: Colors.orange[100],
           values: RangeValues(_viewModel.selectedFilters.minPrice, _viewModel.selectedFilters.maxPrice),
           min: 0,
           max: 100,
@@ -307,7 +309,7 @@ class _FiltersScreenViewState extends State<FiltersScreenView> {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: Colors.blue,
+                backgroundColor: Colors.deepOrange,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),

@@ -191,11 +191,11 @@ class _StrawaDayScreenViewState extends State<StrawaDayScreenView>
       children: [
         CircleAvatar(
           radius: 48.0,
-          backgroundColor: Colors.blue[50],
+          backgroundColor: Colors.orange[50],
           child: const Icon(
             Icons.restaurant_menu,
             size: 48.0,
-            color: Colors.blue,
+            color: Colors.deepOrange,
           ),
         ),
         const SizedBox(height: 24.0),
@@ -261,7 +261,7 @@ class _StrawaDayScreenViewState extends State<StrawaDayScreenView>
       child: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(),
+          CircularProgressIndicator(color: Colors.deepOrange),
           SizedBox(height: 16.0),
           Text(
             'Losowanie produktu...',
@@ -281,7 +281,7 @@ class _StrawaDayScreenViewState extends State<StrawaDayScreenView>
       icon: const Icon(Icons.casino),
       label: Text(label),
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.deepOrange,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
         shape: RoundedRectangleBorder(

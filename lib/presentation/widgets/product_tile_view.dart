@@ -19,8 +19,9 @@ class ProductTileView extends StatelessWidget {
         width: relativeWidth,
         margin: const EdgeInsets.symmetric(vertical: 8.0),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12.0),
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.amber[200]!),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withValues(alpha: 51), // 0.2 * 255 = 51
@@ -58,7 +59,7 @@ class ProductTileView extends StatelessWidget {
                           ),
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) return child;
-                            return const Center(child: CircularProgressIndicator());
+                            return const Center(child: CircularProgressIndicator(color: Colors.deepOrange,));
                           },
                         ),
                       )
@@ -136,15 +137,16 @@ class ProductTileView extends StatelessWidget {
                         children: viewModel.product.tagNames.map((tag) => Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: Colors.blue[50],
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: Colors.blue[200]!),
+                            border: Border.all(color: Colors.deepOrange[200]!),
                           ),
                           child: Text(
                             tag,
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.blue[800],
+                              color: Colors.deepOrange[800],
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         )).toList(),

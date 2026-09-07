@@ -91,7 +91,7 @@ class _HomeScreenViewState extends State<HomeScreenView> {
                   itemCount: _viewModel.products.length + (_viewModel.hasMore ? 1 : 0),
                   itemBuilder: (context, index) {
                     if (index == _viewModel.products.length) {
-                      return Center(child: CircularProgressIndicator());
+                      return Center(child: CircularProgressIndicator(color: Colors.deepOrange));
                     }
                     return ProductTileView(
                         viewModel: ProductTileViewModel(product: _viewModel.products[index])
@@ -108,14 +108,14 @@ class _HomeScreenViewState extends State<HomeScreenView> {
                     FloatingActionButton(
                       heroTag: 'sorting_fab',
                       onPressed: _showSortingPanel,
-                      backgroundColor: Colors.deepPurple,
+                      backgroundColor: Colors.amber[700],
                       child: const Icon(Icons.sort, color: Colors.white),
                     ),
                     const SizedBox(height: 12),
                     FloatingActionButton(
                       heroTag: 'filter_fab',
                       onPressed: _showFilterPanel,
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Colors.deepOrange,
                       child: const Icon(Icons.filter_list, color: Colors.white),
                     ),
                   ],

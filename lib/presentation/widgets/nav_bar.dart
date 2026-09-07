@@ -86,8 +86,8 @@ class NavBar extends StatelessWidget {
     required String label,
   }) {
     final bool isCurrent = viewModel.isCurrent(item);
-    final Color color = isCurrent ? Colors.blue : Colors.grey;
-
+    final Color color = isCurrent ? Colors.deepOrange : Colors.grey;
+    
     return Expanded(
       child: InkWell(
         onTap: isCurrent ? null : () => _switchTo(context, _screenFor(item)),

@@ -117,6 +117,7 @@ class _SortingScreenState extends State<SortingScreen> {
           const SizedBox(height: 8),
           ...SortingScreenViewModel.options.entries.map((entry) {
             return RadioListTile<SortProduct>(
+              activeColor: Colors.deepOrange,
               title: Text(entry.value),
               value: entry.key,
             );
@@ -189,7 +190,7 @@ class _SortingScreenState extends State<SortingScreen> {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: Colors.blue,
+                backgroundColor: Colors.deepOrange,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),

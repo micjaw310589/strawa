@@ -74,7 +74,11 @@ class _NearbyScreenViewState extends State<NearbyScreenView> {
               _buildTopControls(),
               // Jedyny indykator ładowania: pasek postępu pod kontrolkami
               if (_viewModel.isLoading)
-                const LinearProgressIndicator(minHeight: 2.5),
+                const LinearProgressIndicator(
+                  minHeight: 2.5,
+                  color: Colors.deepOrange,
+                  backgroundColor: Color(0xFFFFE0B2)
+                ),
               Expanded(child: _buildContent()),
               if (_viewModel.hasSearched && _viewModel.restaurants.isNotEmpty)
                 _buildBottomOffersButton(),
@@ -154,7 +158,7 @@ class _NearbyScreenViewState extends State<NearbyScreenView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(),
+            CircularProgressIndicator(color: Colors.deepOrange),
             SizedBox(height: 12),
             Text('Szukam restauracji w pobliżu...'),
           ],
@@ -259,7 +263,7 @@ class _NearbyScreenViewState extends State<NearbyScreenView> {
       ),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF2E7D32),
+          backgroundColor: Colors.deepOrange,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 14),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
