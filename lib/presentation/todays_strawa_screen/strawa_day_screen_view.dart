@@ -170,6 +170,8 @@ class _StrawaDayScreenViewState extends State<StrawaDayScreenView>
               ),
             ),
             const SizedBox(height: 24.0),
+            _buildShakeHint('Potrząśnij telefonem, aby wylosować ponownie'),
+            const SizedBox(height: 24.0),
             _buildDrawButton(
               label: 'Wylosuj ponownie',
               onPressed: _drawProduct,
@@ -215,17 +217,7 @@ class _StrawaDayScreenViewState extends State<StrawaDayScreenView>
           style: TextStyle(fontSize: 16, color: Colors.grey[600]),
         ),
         const SizedBox(height: 8.0),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.vibration, size: 16.0, color: Colors.grey[500]),
-            const SizedBox(width: 6.0),
-            Text(
-              'Potrząśnij telefonem, aby wylosować',
-              style: TextStyle(fontSize: 13, color: Colors.grey[500]),
-            ),
-          ],
-        ),
+        _buildShakeHint('Potrząśnij telefonem, aby wylosować'),
         const SizedBox(height: 24.0),
         _buildDrawButton(label: 'Wylosuj produkt', onPressed: _drawProduct),
         if (_viewModel.errorMessage != null) ...[
@@ -236,6 +228,20 @@ class _StrawaDayScreenViewState extends State<StrawaDayScreenView>
             style: const TextStyle(fontSize: 14, color: Colors.redAccent),
           ),
         ],
+      ],
+    );
+  }
+
+  Widget _buildShakeHint(String message) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.vibration, size: 16.0, color: Colors.grey[500]),
+        const SizedBox(width: 6.0),
+        Text(
+          message,
+          style: TextStyle(fontSize: 13, color: Colors.grey[500]),
+        ),
       ],
     );
   }
