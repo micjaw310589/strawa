@@ -138,7 +138,6 @@ class _NearbyScreenViewState extends State<NearbyScreenView> {
                   DropdownMenuItem(value: 5000.0, child: Text('5 km')),
                   DropdownMenuItem(value: 10000.0, child: Text('10 km')),
                   DropdownMenuItem(value: 15000.0, child: Text('15 km')),
-                  DropdownMenuItem(value: 20000.0, child: Text('20 km')),
                 ],
                 onChanged: (value) {
                   if (value != null) _viewModel.setRadius(value);
