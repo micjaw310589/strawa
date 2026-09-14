@@ -60,10 +60,15 @@ class NavBar extends StatelessWidget {
     );
   }
 
-  void _switchTo(BuildContext context, Widget screen) {
+  void _switchTo(
+    BuildContext context,
+    NavBarViewModel viewModel,
+    NavBarItem item,
+  ) {
+    viewModel.setActiveItem(item);
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => screen),
+      MaterialPageRoute(builder: (context) => _screenFor(item)),
     );
   }
 
@@ -90,7 +95,7 @@ class NavBar extends StatelessWidget {
     
     return Expanded(
       child: InkWell(
-        onTap: isCurrent ? null : () => _switchTo(context, _screenFor(item)),
+        onTap: isCurrent ? null : () => _switchTo(context, viewModel, item),
         child: SizedBox(
           height: 56.0,
           child: Column(
