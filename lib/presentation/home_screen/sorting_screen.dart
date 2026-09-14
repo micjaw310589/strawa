@@ -148,6 +148,7 @@ class _SortingScreenState extends State<SortingScreen> {
           const SizedBox(height: 8),
           ...SortingScreenViewModel.order.entries.map((entry) {
             return RadioListTile<bool>(
+              activeColor: Colors.deepOrange,
               title: Text(entry.value),
               value: entry.key,
             );
